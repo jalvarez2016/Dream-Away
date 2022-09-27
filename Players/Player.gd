@@ -29,10 +29,8 @@ func _process(delta):
 	
 	match state:
 		IDLE:
-			print('idle')
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 		WALK:
-			print("walking")
 			
 #			#animation logic
 #			if input_vector.x > 0:
@@ -48,3 +46,4 @@ func _process(delta):
 		FAINT:
 			print("fainted")
 	velocity = move_and_slide(velocity)
+

@@ -1,12 +1,19 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Players/Lia.png" type="Texture" id=1]
 [ext_resource path="res://Players/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Players/Player.gd" type="Script" id=3]
 [ext_resource path="res://icon.png" type="Texture" id=4]
+[ext_resource path="res://Enemies/Enemy.tscn" type="PackedScene" id=5]
+[ext_resource path="res://WorldManager.gd" type="Script" id=6]
 
-[sub_resource type="Animation" id=1]
-resource_name = "BackIdle"
+[sub_resource type="CircleShape2D" id=1]
+radius = 47.4341
+
+[sub_resource type="CapsuleShape2D" id=15]
+height = 9.50339
+
+[sub_resource type="Animation" id=2]
 length = 0.1
 loop = true
 tracks/0/type = "value"
@@ -22,8 +29,7 @@ tracks/0/keys = {
 "values": [ 24 ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "BackWalk"
+[sub_resource type="Animation" id=3]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -39,8 +45,7 @@ tracks/0/keys = {
 "values": [ 24, 25, 26, 27, 28, 29 ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "BattleIdle"
+[sub_resource type="Animation" id=4]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -56,8 +61,7 @@ tracks/0/keys = {
 "values": [ 30, 31, 32, 33, 34, 35 ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "Block"
+[sub_resource type="Animation" id=5]
 length = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:frame")
@@ -72,8 +76,7 @@ tracks/0/keys = {
 "values": [ 51, 52 ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "CastMagic"
+[sub_resource type="Animation" id=6]
 length = 1.6
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:frame")
@@ -88,8 +91,7 @@ tracks/0/keys = {
 "values": [ 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 ]
 }
 
-[sub_resource type="Animation" id=6]
-resource_name = "Faint"
+[sub_resource type="Animation" id=7]
 length = 0.8
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:frame")
@@ -104,7 +106,7 @@ tracks/0/keys = {
 "values": [ 53, 54, 55, 56 ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=8]
 length = 0.1
 loop = true
 tracks/0/type = "value"
@@ -120,7 +122,7 @@ tracks/0/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=9]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -136,8 +138,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=9]
-resource_name = "LeftIdle"
+[sub_resource type="Animation" id=10]
 length = 0.1
 loop = true
 tracks/0/type = "value"
@@ -153,8 +154,7 @@ tracks/0/keys = {
 "values": [ 15 ]
 }
 
-[sub_resource type="Animation" id=10]
-resource_name = "LeftWalk"
+[sub_resource type="Animation" id=11]
 length = 0.9
 loop = true
 tracks/0/type = "value"
@@ -170,7 +170,7 @@ tracks/0/keys = {
 "values": [ 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=12]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:frame")
@@ -185,7 +185,7 @@ tracks/0/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=13]
 length = 0.1
 loop = true
 tracks/0/type = "value"
@@ -201,7 +201,7 @@ tracks/0/keys = {
 "values": [ 6 ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=14]
 length = 0.9
 loop = true
 tracks/0/type = "value"
@@ -218,6 +218,7 @@ tracks/0/keys = {
 }
 
 [node name="World" type="Node2D"]
+script = ExtResource( 6 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 160, 90 )
@@ -225,6 +226,7 @@ z_index = 2
 script = ExtResource( 3 )
 
 [node name="Sprite" parent="Player" index="0"]
+scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 4 )
 
 [node name="Stats" parent="Player" index="3"]
@@ -233,11 +235,23 @@ attack = 15
 agility = 5
 speed = 5
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="PlayerCamera" type="Camera2D" parent="Player"]
 current = true
 smoothing_enabled = true
 
+[node name="PlayerDetectionArea" type="Area2D" parent="Player"]
+
+[node name="PlayerDetectionShape" type="CollisionShape2D" parent="Player/PlayerDetectionArea"]
+shape = SubResource( 1 )
+
+[node name="PlayerBattleArea" type="Area2D" parent="Player"]
+position = Vector2( 0, 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/PlayerBattleArea"]
+shape = SubResource( 15 )
+
 [node name="Lia" parent="." instance=ExtResource( 2 )]
+visible = false
 position = Vector2( 160, 90 )
 z_index = 1
 
@@ -247,23 +261,28 @@ hframes = 57
 frame = 24
 
 [node name="AnimationPlayer" parent="Lia" index="1"]
-anims/BackIdle = SubResource( 1 )
-anims/BackWalk = SubResource( 2 )
-anims/BattleIdle = SubResource( 3 )
-anims/Block = SubResource( 4 )
-anims/CastMagic = SubResource( 5 )
-anims/Faint = SubResource( 6 )
-anims/FrontIdle = SubResource( 7 )
-anims/FrontWalk = SubResource( 8 )
-anims/LeftIdle = SubResource( 9 )
-anims/LeftWalk = SubResource( 10 )
-anims/RESET = SubResource( 11 )
-anims/RightIdle = SubResource( 12 )
-anims/RightWalk = SubResource( 13 )
+anims/BackIdle = SubResource( 2 )
+anims/BackWalk = SubResource( 3 )
+anims/BattleIdle = SubResource( 4 )
+anims/Block = SubResource( 5 )
+anims/CastMagic = SubResource( 6 )
+anims/Faint = SubResource( 7 )
+anims/FrontIdle = SubResource( 8 )
+anims/FrontWalk = SubResource( 9 )
+anims/LeftIdle = SubResource( 10 )
+anims/LeftWalk = SubResource( 11 )
+anims/RESET = SubResource( 12 )
+anims/RightIdle = SubResource( 13 )
+anims/RightWalk = SubResource( 14 )
 
 [node name="Seigi" parent="." instance=ExtResource( 2 )]
 visible = false
 position = Vector2( 160, 90 )
+
+[node name="Enemy" parent="." instance=ExtResource( 5 )]
+position = Vector2( 290.535, 154.57 )
+
+[connection signal="area_entered" from="Player/PlayerBattleArea" to="." method="_on_PlayerBattleArea_area_entered"]
 
 [editable path="Player"]
 [editable path="Lia"]
