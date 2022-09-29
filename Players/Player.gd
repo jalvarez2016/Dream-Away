@@ -15,6 +15,7 @@ enum {
 }
 
 var state = IDLE
+var isBattling = false
 
 func _process(delta):
 	var input_vector = Vector2.ZERO
@@ -22,7 +23,7 @@ func _process(delta):
 	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
 	
-	if input_vector != Vector2.ZERO:
+	if input_vector != Vector2.ZERO && !isBattling:
 		state = WALK
 	else:
 		state = IDLE
@@ -47,3 +48,16 @@ func _process(delta):
 			print("fainted")
 	velocity = move_and_slide(velocity)
 
+func _on_PlayerBattleArea_area_entered(area):
+	var parentNode = get_node("../")
+	if area.find_parent("Enemy") && !isBattling:
+		isBattling = !isBattling
+		var allies = get_tree().get_nodes_in_group('Ally')
+		var enemies = get_tree().get_nodes_in_group('Enemy')
+		for player in allies:
+			parentNode.level_parameters.players.append(parentNode._deconstruct_node(player))
+			player.queue_free()
+		for enemy in enemies:
+			parentNode.level_parameters.enemies.append(parentNode._deconstruct_node(enemy))
+			enemy.queue_free()
+		parentNode._change_to_battle()

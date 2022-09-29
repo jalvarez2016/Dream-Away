@@ -1,24 +1,25 @@
 extends Node2D
 
-
 # Declare local paramaters to pass to battle scene
-var players
-var enemies
+var isBattling = false
+var level_parameters := {
+	"players": [],
+	"enemies": []
+}
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+func _change_to_battle():
+	var battle_scene = load("res://Utils/Battle.tscn").instance()
+	battle_scene.level_parameters = level_parameters
+	get_node("../").add_child(battle_scene)
+	queue_free()
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-func _on_PlayerBattleArea_area_entered(area):
-	if area.find_parent("Enemy"):
-		players = get_tree().get_nodes_in_group('player')
-		enemies = get_tree().get_nodes_in_group('enemies')
-		print([players, enemies])
-		print("battle start")
-#		transition to battle scene
-	pass # Replace with function body.
+func _deconstruct_node(node):
+	var stats = node.get_node("Stats")
+	var nodeName = node.get_name()
+	var nodeSprite = node.get_node("Sprite").texture.resource_path
+	var nodeData = {
+		"name": nodeName,
+		"sprite": nodeSprite,
+		"battleInfo": stats
+	}
+	return nodeData

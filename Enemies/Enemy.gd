@@ -15,15 +15,13 @@ func _can_see_Player():
 
 func _on_can_see_player(area):
 	if area.find_parent("Player"):
-		print("player object")
 		player = area.find_parent('Player')
 		state = CHASE
 
-func _on_DetectionZone_area_exited(area):
+func _on_DetectionZone_area_exited(_area):
 	player = null
-	print("exited")
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if _can_see_Player():
 		match state:
 			CHASE:

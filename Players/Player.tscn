@@ -5,7 +5,7 @@
 [sub_resource type="CapsuleShape2D" id=1]
 height = 10.0
 
-[node name="Player" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D" groups=["Ally"]]
 
 [node name="Sprite" type="Sprite" parent="."]
 
@@ -13,9 +13,6 @@ height = 10.0
 root_node = NodePath("../Sprite")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0, 4 )
 shape = SubResource( 1 )
 
-[node name="Stats" parent="." groups=[
-"Ally",
-] instance=ExtResource( 1 )]
+[node name="Stats" parent="." instance=ExtResource( 1 )]
