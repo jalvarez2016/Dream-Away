@@ -4,6 +4,7 @@ var velocity = Vector2.ZERO
 var MAX_SPEED = 80
 var ACCELERATION = 500
 var FRICTION = 500
+var ALLY_WALK_SPEED = 80
 onready var animationPlayer = $AnimationPlayer
 
 enum {
@@ -22,6 +23,8 @@ func _process(delta):
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
+	if !isBattling:
+		_ally_follow()
 	
 	if input_vector != Vector2.ZERO && !isBattling:
 		state = WALK
@@ -49,11 +52,12 @@ func _process(delta):
 	velocity = move_and_slide(velocity)
 
 func _on_PlayerBattleArea_area_entered(area):
-	var parentNode = get_node("../")
+	var parentNode = get_node("../../")
 	if area.find_parent("Enemy") && !isBattling:
 		isBattling = !isBattling
 		var allies = get_tree().get_nodes_in_group('Ally')
-		var enemies = get_tree().get_nodes_in_group('Enemy')
+		var enemies = [area.find_parent("Enemy")]
+		print(enemies)
 		for player in allies:
 			parentNode.level_parameters.players.append(parentNode._deconstruct_node(player))
 			player.queue_free()
@@ -61,3 +65,10 @@ func _on_PlayerBattleArea_area_entered(area):
 			parentNode.level_parameters.enemies.append(parentNode._deconstruct_node(enemy))
 			enemy.queue_free()
 		parentNode._change_to_battle()
+
+func _ally_follow():
+	var allies = get_tree().get_nodes_in_group('Ally')
+	for ally in allies:
+		if ally.get_name() != "Player":
+			var direction = (position - ally.position).normalized()
+			direction = ally.move_and_slide(direction * ALLY_WALK_SPEED)

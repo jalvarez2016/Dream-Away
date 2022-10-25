@@ -43,9 +43,25 @@ func _create_player(nodeData, index):
 #	https://stackoverflow.com/questions/73257252/how-do-i-programmatically-load-animations-in-godot-separating-animation-from-ar
 	
 #	Set individual player position
-	battlePlayer.position = Vector2(20, (180/5) * index)
+	battlePlayer.position = Vector2(20, (160/5) * index + 20)
 	pContainer.add_child(battlePlayer)
 
-func _create_enemy(nodeDate, index):
+func _create_enemy(nodeData, index):
 	var battleEnemy = load("res://Enemies/BattleEnemy.tscn").instance()
-#	add_child(battleEnemy)
+	var stats = battleEnemy.get_node("Stats")
+	var sprite = battleEnemy.get_node("Sprite")
+	var newSprite = load(nodeData.sprite)
+	
+#	Set individual player stats
+	battleEnemy.set_name(nodeData.name)
+	stats.hp = nodeData.battleInfo.hp
+	stats.attack = nodeData.battleInfo.attack
+	stats.defense = nodeData.battleInfo.defense
+	stats.mp = nodeData.battleInfo.mp
+	stats.agility = nodeData.battleInfo.agility
+	stats.speed = nodeData.battleInfo.speed
+	sprite.texture = newSprite
+	
+#	Set individual player position
+	battleEnemy.position = Vector2(300, (150/5) * index)
+	add_child(battleEnemy)

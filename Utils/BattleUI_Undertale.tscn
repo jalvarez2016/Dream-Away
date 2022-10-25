@@ -1,0 +1,193 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Fonts/Bungee.tres" type="DynamicFont" id=1]
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 1 )
+border_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 1, 1, 1 )
+
+[node name="Control" type="Control"]
+margin_right = 320.0
+margin_bottom = 180.0
+
+[node name="Panel" type="Panel" parent="."]
+margin_top = 65.0
+margin_right = 320.0
+margin_bottom = 180.0
+custom_styles/panel = SubResource( 3 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+margin_top = 96.0
+margin_right = 320.0
+margin_bottom = 115.0
+
+[node name="Attack" type="Button" parent="Panel/HBoxContainer"]
+margin_right = 60.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "Attk"
+clip_text = true
+
+[node name="Skill" type="Button" parent="Panel/HBoxContainer"]
+margin_left = 64.0
+margin_right = 125.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "Skill"
+clip_text = true
+
+[node name="Item" type="Button" parent="Panel/HBoxContainer"]
+margin_left = 129.0
+margin_right = 190.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "Item"
+clip_text = true
+
+[node name="Defend" type="Button" parent="Panel/HBoxContainer"]
+margin_left = 194.0
+margin_right = 255.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "Def"
+clip_text = true
+
+[node name="Run" type="Button" parent="Panel/HBoxContainer"]
+margin_left = 259.0
+margin_right = 320.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "Run"
+clip_text = true
+
+[node name="HP Container" type="HBoxContainer" parent="."]
+margin_left = 11.0
+margin_top = 137.0
+margin_right = 311.0
+margin_bottom = 155.0
+
+[node name="Name" type="Label" parent="HP Container"]
+margin_top = 3.0
+margin_right = 30.0
+margin_bottom = 14.0
+size_flags_horizontal = 0
+custom_fonts/font = ExtResource( 1 )
+text = "Name"
+align = 1
+valign = 1
+
+[node name="LVL" type="Label" parent="HP Container"]
+margin_left = 34.0
+margin_top = 3.0
+margin_right = 48.0
+margin_bottom = 14.0
+size_flags_horizontal = 0
+custom_fonts/font = ExtResource( 1 )
+text = "lv"
+align = 1
+valign = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="HP Container"]
+margin_left = 52.0
+margin_right = 300.0
+margin_bottom = 18.0
+size_flags_horizontal = 7
+size_flags_vertical = 1
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_styles/fg = SubResource( 4 )
+custom_styles/bg = SubResource( 5 )
+step = 1.0
+percent_visible = false
+
+[node name="Label" type="Label" parent="HP Container/ProgressBar"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -25.0
+margin_top = -7.0
+margin_right = 25.0
+margin_bottom = 7.0
+custom_fonts/font = ExtResource( 1 )
+text = "HP: 30/30"
+align = 1
+valign = 1
+clip_text = true
+
+[node name="Log" type="Panel" parent="."]
+margin_left = 3.0
+margin_top = 68.0
+margin_right = 317.0
+margin_bottom = 132.0
+custom_styles/panel = SubResource( 6 )
