@@ -9,7 +9,6 @@ var state = WANDER
 var player = null
 var WALK_SPEED = 80
 
-
 func _can_see_Player():
 	return player != null
 

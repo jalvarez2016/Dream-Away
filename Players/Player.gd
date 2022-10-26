@@ -53,11 +53,11 @@ func _process(delta):
 
 func _on_PlayerBattleArea_area_entered(area):
 	var parentNode = get_node("../../")
-	if area.find_parent("Enemy") && !isBattling:
+	var isHitBox = area.get_name() == "HitBox"
+	if area.find_parent("Enemy") && !isBattling && isHitBox:
 		isBattling = !isBattling
 		var allies = get_tree().get_nodes_in_group('Ally')
 		var enemies = [area.find_parent("Enemy")]
-		print(enemies)
 		for player in allies:
 			parentNode.level_parameters.players.append(parentNode._deconstruct_node(player))
 			player.queue_free()

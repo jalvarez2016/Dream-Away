@@ -265,6 +265,9 @@ position = Vector2( 160, 90 )
 texture = ExtResource( 1 )
 hframes = 60
 
+[node name="Stats" parent="YSort/Player" index="3"]
+speed = 12
+
 [node name="Lia" parent="YSort" instance=ExtResource( 2 )]
 position = Vector2( 160, 55 )
 
@@ -288,6 +291,9 @@ anims/RESET = SubResource( 12 )
 anims/RightIdle = ExtResource( 7 )
 anims/RightWalk = ExtResource( 9 )
 
+[node name="Stats" parent="YSort/Lia" index="3"]
+speed = 5
+
 [node name="Seigi" parent="YSort" instance=ExtResource( 2 )]
 position = Vector2( 160, 20 )
 
@@ -310,6 +316,9 @@ anims/LeftWalk = SubResource( 23 )
 anims/RESET = SubResource( 24 )
 anims/RightIdle = SubResource( 25 )
 anims/RightWalk = SubResource( 26 )
+
+[node name="Stats" parent="YSort/Seigi" index="3"]
+speed = 20
 
 [node name="Enemy" parent="YSort" instance=ExtResource( 5 )]
 position = Vector2( 290.535, 154.57 )

@@ -1,11 +1,11 @@
 extends Node2D
 
 var level_parameters
+var everyone = []
 onready var pContainer = $PlayerContainer
 onready var eContainer = $EnemiesContainer
 
 func _ready():
-	print(pContainer, eContainer)
 	var players = level_parameters.players
 	var enemies = level_parameters.enemies
 	var counter = 0
@@ -16,6 +16,10 @@ func _ready():
 	for enemy in enemies:
 		counter += 1
 		_create_enemy(enemy, counter)
+		
+	everyone.append_array(players)
+	everyone.append_array(enemies)
+	_set_turn_order(everyone)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -26,7 +30,6 @@ func _create_player(nodeData, index):
 	var stats = battlePlayer.get_node("Stats")
 	var sprite = battlePlayer.get_node("Sprite")
 	var newSprite = load(nodeData.sprite)
-	print(nodeData.sprite)
 	
 #	Set individual player stats
 	battlePlayer.set_name(nodeData.name)
@@ -65,3 +68,7 @@ func _create_enemy(nodeData, index):
 #	Set individual player position
 	battleEnemy.position = Vector2(300, (150/5) * index)
 	add_child(battleEnemy)
+
+func _set_turn_order(characters):
+	for character in characters:
+		print(character.battleInfo.speed)
