@@ -5,4 +5,4 @@
 [node name="Player" instance=ExtResource( 1 )]
 
 [node name="Sprite" parent="." index="0"]
-hframes = 57
+hframes = 60

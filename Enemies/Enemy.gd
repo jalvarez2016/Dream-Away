@@ -4,7 +4,7 @@ enum {
 	WANDER,
 	CHASE
 }
-
+onready var stats = $Stats
 var state = WANDER
 var player = null
 var WALK_SPEED = 80
@@ -26,7 +26,5 @@ func _physics_process(_delta):
 			CHASE:
 				var direction = (player.position - position).normalized()
 				direction = move_and_slide(direction * WALK_SPEED)
-				pass
 			WANDER:
 				pass
-				

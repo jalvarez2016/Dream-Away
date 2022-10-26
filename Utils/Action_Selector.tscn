@@ -23,6 +23,7 @@ radius = 7.07107
 radius = 7.07107
 
 [node name="Action Selector" type="Node2D"]
+position = Vector2( 0, -35 )
 script = ExtResource( 2 )
 
 [node name="ActionLabel" type="Label" parent="."]
@@ -31,9 +32,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -51.0
-margin_top = -25.0
+margin_top = -17.0
 margin_right = 51.0
-margin_bottom = -11.0
+margin_bottom = -3.0
 custom_fonts/font = ExtResource( 3 )
 text = "Attack"
 align = 1
@@ -42,8 +43,8 @@ valign = 1
 [node name="Actions" type="Node2D" parent="."]
 
 [node name="Attack" type="KinematicBody2D" parent="Actions"]
-position = Vector2( 0, 20 )
-scale = Vector2( 0.5, 0.5 )
+position = Vector2( 0, 10 )
+scale = Vector2( 0.3, 0.3 )
 z_index = 2
 
 [node name="AttackSprite" type="Sprite" parent="Actions/Attack"]
@@ -53,8 +54,8 @@ texture = ExtResource( 4 )
 shape = SubResource( 1 )
 
 [node name="Skill" type="KinematicBody2D" parent="Actions"]
-position = Vector2( 40, 10 )
-scale = Vector2( 0.2, 0.2 )
+position = Vector2( 20, 10 )
+scale = Vector2( 0.1, 0.1 )
 z_index = 1
 
 [node name="Skill" type="Sprite" parent="Actions/Skill"]
@@ -64,8 +65,8 @@ texture = ExtResource( 6 )
 shape = SubResource( 2 )
 
 [node name="Style" type="KinematicBody2D" parent="Actions"]
-position = Vector2( 20, 0 )
-scale = Vector2( 0.2, 0.2 )
+position = Vector2( 10, 0 )
+scale = Vector2( 0.1, 0.1 )
 
 [node name="Style" type="Sprite" parent="Actions/Style"]
 texture = ExtResource( 5 )
@@ -74,8 +75,8 @@ texture = ExtResource( 5 )
 shape = SubResource( 3 )
 
 [node name="Item" type="KinematicBody2D" parent="Actions"]
-position = Vector2( -20, 0 )
-scale = Vector2( 0.2, 0.2 )
+position = Vector2( -10, 0 )
+scale = Vector2( 0.1, 0.1 )
 
 [node name="Item" type="Sprite" parent="Actions/Item"]
 texture = ExtResource( 7 )
@@ -84,8 +85,8 @@ texture = ExtResource( 7 )
 shape = SubResource( 4 )
 
 [node name="Run" type="KinematicBody2D" parent="Actions"]
-position = Vector2( -40, 10 )
-scale = Vector2( 0.2, 0.2 )
+position = Vector2( -20, 10 )
+scale = Vector2( 0.1, 0.1 )
 z_index = 1
 
 [node name="Run" type="Sprite" parent="Actions/Run"]

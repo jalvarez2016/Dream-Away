@@ -1,29 +1,39 @@
 extends Node2D
 
+onready var turnManager = load("res://Utils/TurnManager.gd").new()
+var playerNames = ["Seigi", "Player", "Lia"]
 var level_parameters
 var everyone = []
+var turn_queue = []
+var currentTurn
 onready var pContainer = $PlayerContainer
 onready var eContainer = $EnemiesContainer
+
+class MyCustomSorter:
+	static func sort_decending(a, b):
+		if a.battleInfo.speed > b.battleInfo.speed:
+			return true
+		return false
 
 func _ready():
 	var players = level_parameters.players
 	var enemies = level_parameters.enemies
 	var counter = 0
 	for player in players:
-		counter += 1
 		_create_player(player, counter)
+		counter += 1
 	counter = 0
 	for enemy in enemies:
+		_create_enemy(enemy, counter, enemies.size())
 		counter += 1
-		_create_enemy(enemy, counter)
 		
 	everyone.append_array(players)
 	everyone.append_array(enemies)
 	_set_turn_order(everyone)
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
+	
+	turnManager.connect("ally_turn_started", self, "_on_ally_turn_end")
+	turnManager.connect("enemy_turn_started", self, "_on_enemy_turn_end")
+	_start_turn_sequence()
 
 func _create_player(nodeData, index):
 	var battlePlayer = load("res://Players/BattlePlayer.tscn").instance()
@@ -46,10 +56,10 @@ func _create_player(nodeData, index):
 #	https://stackoverflow.com/questions/73257252/how-do-i-programmatically-load-animations-in-godot-separating-animation-from-ar
 	
 #	Set individual player position
-	battlePlayer.position = Vector2(20, (160/5) * index + 20)
+	battlePlayer.position = Vector2(50, 50 * index + 30)
 	pContainer.add_child(battlePlayer)
 
-func _create_enemy(nodeData, index):
+func _create_enemy(nodeData, index, amount):
 	var battleEnemy = load("res://Enemies/BattleEnemy.tscn").instance()
 	var stats = battleEnemy.get_node("Stats")
 	var sprite = battleEnemy.get_node("Sprite")
@@ -66,9 +76,30 @@ func _create_enemy(nodeData, index):
 	sprite.texture = newSprite
 	
 #	Set individual player position
-	battleEnemy.position = Vector2(300, (150/5) * index)
-	add_child(battleEnemy)
+	battleEnemy.position = Vector2(220, (120/amount + 2) * index + 60)
+	eContainer.add_child(battleEnemy)
 
 func _set_turn_order(characters):
-	for character in characters:
-		print(character.battleInfo.speed)
+	turn_queue.append_array(characters)
+	turn_queue.sort_custom(MyCustomSorter, 'sort_decending')
+
+func _start_turn_sequence():
+	var action_selector = load("res://Utils/Action_Selector.tscn").instance()
+	currentTurn = turn_queue.pop_front()
+	if currentTurn.name in playerNames:
+		var currentTurnNode = pContainer.get_node(currentTurn.name)
+		currentTurnNode.add_child(action_selector)
+		currentTurnNode.position = Vector2(120, 100)
+		
+func _on_ally_turn_end():
+	print("enemy turn start")
+	turnManager.turn = turnManager.ENEMY_TURN
+	
+func _on_enemy_turn_end():
+	print("ally turn start")
+#	Get all players
+#	Pick one randomly
+#	Do damage
+#	Player takes damage animation here
+#	turnManager.turn = turnManager.ALLY_TURN
+	
