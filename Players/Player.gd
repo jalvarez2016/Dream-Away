@@ -71,4 +71,6 @@ func _ally_follow():
 	for ally in allies:
 		if ally.get_name() != "Player":
 			var direction = (position - ally.position).normalized()
-			direction = ally.move_and_slide(direction * ALLY_WALK_SPEED)
+			var distance = position - ally.position
+			if (distance.x > 20 || distance.y > 20) || (distance.x < -20 || distance.y < -20):
+				direction = ally.move_and_slide(direction * ALLY_WALK_SPEED)

@@ -321,7 +321,7 @@ anims/RightWalk = SubResource( 26 )
 speed = 20
 
 [node name="Enemy" parent="YSort" instance=ExtResource( 5 )]
-position = Vector2( 290.535, 154.57 )
+position = Vector2( 265, 129 )
 
 [editable path="YSort/Player"]
 [editable path="YSort/Lia"]

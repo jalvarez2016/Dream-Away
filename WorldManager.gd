@@ -15,11 +15,19 @@ func _change_to_battle():
 
 func _deconstruct_node(node):
 	var stats = node.get_node("Stats")
+	print(node)
 	var nodeName = node.get_name()
 	var nodeSprite = node.get_node("Sprite").texture.resource_path
 	var nodeData = {
 		"name": nodeName,
 		"sprite": nodeSprite,
-		"battleInfo": stats
+		"battleInfo": {
+			"hp": stats.hp,
+			"attack": stats.attack,
+			"defense": stats.defense,
+			"mp": stats.mp,
+			"agility": stats.agility,
+			"speed": stats.speed
+		}
 	}
 	return nodeData

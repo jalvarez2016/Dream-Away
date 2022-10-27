@@ -6,6 +6,7 @@ var level_parameters
 var everyone = []
 var turn_queue = []
 var currentTurn
+var restPosition
 onready var pContainer = $PlayerContainer
 onready var eContainer = $EnemiesContainer
 
@@ -16,6 +17,7 @@ class MyCustomSorter:
 		return false
 
 func _ready():
+	randomize()
 	var players = level_parameters.players
 	var enemies = level_parameters.enemies
 	var counter = 0
@@ -33,6 +35,7 @@ func _ready():
 	
 	turnManager.connect("ally_turn_started", self, "_on_ally_turn_end")
 	turnManager.connect("enemy_turn_started", self, "_on_enemy_turn_end")
+	currentTurn = turn_queue.pop_front()
 	_start_turn_sequence()
 
 func _create_player(nodeData, index):
@@ -40,7 +43,6 @@ func _create_player(nodeData, index):
 	var stats = battlePlayer.get_node("Stats")
 	var sprite = battlePlayer.get_node("Sprite")
 	var newSprite = load(nodeData.sprite)
-	
 #	Set individual player stats
 	battlePlayer.set_name(nodeData.name)
 	stats.hp = nodeData.battleInfo.hp
@@ -85,21 +87,62 @@ func _set_turn_order(characters):
 
 func _start_turn_sequence():
 	var action_selector = load("res://Utils/Action_Selector.tscn").instance()
-	currentTurn = turn_queue.pop_front()
 	if currentTurn.name in playerNames:
 		var currentTurnNode = pContainer.get_node(currentTurn.name)
 		currentTurnNode.add_child(action_selector)
+		restPosition = currentTurnNode.position
 		currentTurnNode.position = Vector2(120, 100)
 		
+func _reset_position():
+	if currentTurn.name in playerNames:
+		var currentTurnNode = pContainer.get_node(currentTurn.name)
+		currentTurnNode.position = restPosition
+
 func _on_ally_turn_end():
-	print("enemy turn start")
-	turnManager.turn = turnManager.ENEMY_TURN
+	_reset_position()
 	
+	if turn_queue.size() > 0:
+		currentTurn = turn_queue.pop_front()
+		if currentTurn.name in playerNames:
+			_start_turn_sequence()
+		else:
+			_swap_turn()
+	else:
+		_set_turn_order(everyone)
+		currentTurn = turn_queue.pop_front()
+		if currentTurn.name in playerNames:
+			_start_turn_sequence()
+		else:
+			_swap_turn()
+
 func _on_enemy_turn_end():
-	print("ally turn start")
-#	Get all players
-#	Pick one randomly
-#	Do damage
-#	Player takes damage animation here
-#	turnManager.turn = turnManager.ALLY_TURN
+	var players = get_tree().get_nodes_in_group('Ally')
+	var selectedPlayer = players[randi() % players.size()]
+	var selectedPlayerStats = selectedPlayer.get_node("Stats")
+	var selectedPlayerDef = selectedPlayerStats.defense
 	
+	var currentTurnNode = eContainer.get_node(currentTurn.name)
+	var enemyAttackStat = currentTurnNode.get_node("Stats").attack
+	currentTurnNode._attack_animation()
+
+	var calculateDamage
+	if (selectedPlayerDef * .8) > enemyAttackStat:
+		calculateDamage = enemyAttackStat / 2
+	else:
+		calculateDamage = (enemyAttackStat - round(selectedPlayerDef * 0.8)) + (randi() % 5)
+
+	selectedPlayerStats.hp = selectedPlayerStats.hp - calculateDamage
+#	Player takes damage animation here
+	
+func _swap_turn():
+	match turnManager.turn:
+		0:
+			turnManager.turn = turnManager.ENEMY_TURN
+		1:
+			turnManager.turn = turnManager.ALLY_TURN
+
+func _end_battle():
+	var battle_scene = load("res://World.tscn").instance()
+	battle_scene.level_parameters = level_parameters
+	get_node("../").add_child(battle_scene)
+	queue_free()

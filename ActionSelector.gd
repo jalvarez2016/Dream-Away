@@ -16,6 +16,7 @@ var enemyAnimationPlayer
 var relevantStat
 
 func _ready():
+	randomize()
 	actions = get_node("Actions").get_children()
 	current_action = actions.pop_front()
 	enemies = get_tree().get_nodes_in_group("BattleInstance")
@@ -168,7 +169,8 @@ func _attack_action():
 	enemyAnimationPlayer.play("RESET")
 	var enemyDefense = current_enemy.get_node("Stats").defense
 	var damageDelt = relevantStat - (enemyDefense/ 1.5)
-	current_enemy._take_damage(damageDelt)
+	current_enemy._take_damage(damageDelt + (randi() % 5))
+	
 	
 #	Place enemy taking damage animation here
 #	Check if enemy dead
