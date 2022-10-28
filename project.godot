@@ -24,6 +24,10 @@ config/name="Dream Away"
 run/main_scene="res://World.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+BattleData="*res://Utils/BattleData.tscn"
+
 [display]
 
 window/size/width=320

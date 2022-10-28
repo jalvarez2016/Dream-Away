@@ -43,7 +43,7 @@ func _create_player(nodeData, index):
 	var stats = battlePlayer.get_node("Stats")
 	var sprite = battlePlayer.get_node("Sprite")
 	var newSprite = load(nodeData.sprite)
-#	Set individual player stats
+	#Set individual player stats
 	battlePlayer.set_name(nodeData.name)
 	stats.hp = nodeData.battleInfo.hp
 	stats.attack = nodeData.battleInfo.attack
@@ -92,13 +92,14 @@ func _start_turn_sequence():
 		currentTurnNode.add_child(action_selector)
 		restPosition = currentTurnNode.position
 		currentTurnNode.position = Vector2(120, 100)
-		
+
 func _reset_position():
 	if currentTurn.name in playerNames:
 		var currentTurnNode = pContainer.get_node(currentTurn.name)
 		currentTurnNode.position = restPosition
 
 func _on_ally_turn_end():
+	_sync_battle_info()
 	_reset_position()
 	
 	if turn_queue.size() > 0:
@@ -142,7 +143,73 @@ func _swap_turn():
 			turnManager.turn = turnManager.ALLY_TURN
 
 func _end_battle():
-	var battle_scene = load("res://World.tscn").instance()
-	battle_scene.level_parameters = level_parameters
-	get_node("../").add_child(battle_scene)
+	var world_scene = load("res://World.tscn").instance()
+	world_scene.level_parameters = level_parameters
+	get_node("../").add_child(world_scene)
 	queue_free()
+
+#	Data Syncing functions
+
+func _update_turn_queue():
+	var count = 0
+	var updated_turn_queue = []
+	print(turn_queue)
+	while count < turn_queue.size():
+		var currentCheck = turn_queue[count]
+		if currentCheck.battleInfo.hp > 0:
+			updated_turn_queue.append(currentCheck)
+		count  = count + 1
+	turn_queue = updated_turn_queue
+	_check_win()
+
+func _sync_battle_info():
+	var players = get_node("PlayerContainer").get_children()
+	var enemies = get_node("EnemiesContainer").get_children()
+	
+	for character in players:
+		var playerName = character.get_name()
+		
+		# Traverse through turn_queue
+		var index = 0
+		while index < turn_queue.size():
+			var queued_turn = turn_queue[index]
+			if playerName == queued_turn.name:
+				var stats = character.get_node("Stats")
+				
+				queued_turn.battleInfo.hp = stats.hp
+				queued_turn.battleInfo.attack = stats.attack
+				queued_turn.battleInfo.defense = stats.defense
+				queued_turn.battleInfo.mp = stats.mp
+				queued_turn.battleInfo.agility = stats.agility
+				queued_turn.battleInfo.speed = stats.speed
+			index += 1
+	
+	for character in enemies:
+		var playerName = character.get_name()
+		
+		# Traverse through turn_queue
+		var index = 0
+		while index < turn_queue.size():
+			var queued_turn = turn_queue[index]
+			if playerName == queued_turn.name:
+				var stats = character.get_node("Stats")
+				
+				queued_turn.battleInfo.hp = stats.hp
+				queued_turn.battleInfo.attack = stats.attack
+				queued_turn.battleInfo.defense = stats.defense
+				queued_turn.battleInfo.mp = stats.mp
+				queued_turn.battleInfo.agility = stats.agility
+				queued_turn.battleInfo.speed = stats.speed
+			index += 1
+	_update_turn_queue()
+
+func _check_win():
+	var enemies = eContainer.get_children()
+	
+	var index = 0
+	while index < enemies.size():
+		var enemy = enemies[index]
+		var enemyHp = enemy.get_node("Stats").hp
+		index += 1
+		if enemyHp > 0: return
+	_end_battle()

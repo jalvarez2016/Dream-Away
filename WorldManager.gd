@@ -7,6 +7,9 @@ var level_parameters := {
 	"enemies": []
 }
 
+func _ready():
+	pass
+
 func _change_to_battle():
 	var battle_scene = load("res://Utils/Battle.tscn").instance()
 	battle_scene.level_parameters = level_parameters
@@ -28,6 +31,13 @@ func _deconstruct_node(node):
 			"mp": stats.mp,
 			"agility": stats.agility,
 			"speed": stats.speed
+		},
+		"position": {
+			"x": node.position.x,
+			"y": node.position.y
 		}
 	}
 	return nodeData
+
+func _build_node(nodeData):
+	pass

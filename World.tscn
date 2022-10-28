@@ -256,26 +256,26 @@ tracks/0/keys = {
 [node name="World" type="Node2D"]
 script = ExtResource( 6 )
 
-[node name="YSort" type="YSort" parent="."]
+[node name="Entities Container" type="YSort" parent="."]
 
-[node name="Player" parent="YSort" instance=ExtResource( 3 )]
+[node name="Player" parent="Entities Container" instance=ExtResource( 3 )]
 position = Vector2( 160, 90 )
 
-[node name="Sprite" parent="YSort/Player" index="0"]
+[node name="Sprite" parent="Entities Container/Player" index="0"]
 texture = ExtResource( 1 )
 hframes = 60
 
-[node name="Stats" parent="YSort/Player" index="3"]
+[node name="Stats" parent="Entities Container/Player" index="3"]
 speed = 12
 
-[node name="Lia" parent="YSort" instance=ExtResource( 2 )]
+[node name="Lia" parent="Entities Container" instance=ExtResource( 2 )]
 position = Vector2( 160, 55 )
 
-[node name="Sprite" parent="YSort/Lia" index="0"]
+[node name="Sprite" parent="Entities Container/Lia" index="0"]
 texture = ExtResource( 1 )
 hframes = 60
 
-[node name="AnimationPlayer" parent="YSort/Lia" index="1"]
+[node name="AnimationPlayer" parent="Entities Container/Lia" index="1"]
 anims/BackIdle = ExtResource( 12 )
 anims/BackWalk = ExtResource( 14 )
 anims/BattleIdle = ExtResource( 13 )
@@ -291,17 +291,17 @@ anims/RESET = SubResource( 12 )
 anims/RightIdle = ExtResource( 7 )
 anims/RightWalk = ExtResource( 9 )
 
-[node name="Stats" parent="YSort/Lia" index="3"]
+[node name="Stats" parent="Entities Container/Lia" index="3"]
 speed = 5
 
-[node name="Seigi" parent="YSort" instance=ExtResource( 2 )]
+[node name="Seigi" parent="Entities Container" instance=ExtResource( 2 )]
 position = Vector2( 160, 20 )
 
-[node name="Sprite" parent="YSort/Seigi" index="0"]
+[node name="Sprite" parent="Entities Container/Seigi" index="0"]
 texture = ExtResource( 1 )
 hframes = 60
 
-[node name="AnimationPlayer" parent="YSort/Seigi" index="1"]
+[node name="AnimationPlayer" parent="Entities Container/Seigi" index="1"]
 anims/BackIdle = SubResource( 13 )
 anims/BackWalk = SubResource( 14 )
 anims/BattleIdle = SubResource( 15 )
@@ -317,12 +317,12 @@ anims/RESET = SubResource( 24 )
 anims/RightIdle = SubResource( 25 )
 anims/RightWalk = SubResource( 26 )
 
-[node name="Stats" parent="YSort/Seigi" index="3"]
+[node name="Stats" parent="Entities Container/Seigi" index="3"]
 speed = 20
 
-[node name="Enemy" parent="YSort" instance=ExtResource( 5 )]
+[node name="Enemy" parent="Entities Container" instance=ExtResource( 5 )]
 position = Vector2( 265, 129 )
 
-[editable path="YSort/Player"]
-[editable path="YSort/Lia"]
-[editable path="YSort/Seigi"]
+[editable path="Entities Container/Player"]
+[editable path="Entities Container/Lia"]
+[editable path="Entities Container/Seigi"]

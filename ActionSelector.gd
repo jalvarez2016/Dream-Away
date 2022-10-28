@@ -171,9 +171,7 @@ func _attack_action():
 	var damageDelt = relevantStat - (enemyDefense/ 1.5)
 	current_enemy._take_damage(damageDelt + (randi() % 5))
 	
-	
 #	Place enemy taking damage animation here
 #	Check if enemy dead
-
 	var battleNode = get_node("../../../")._on_ally_turn_end()
 	queue_free()
