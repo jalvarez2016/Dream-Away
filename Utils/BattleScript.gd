@@ -153,7 +153,7 @@ func _end_battle():
 func _update_turn_queue():
 	var count = 0
 	var updated_turn_queue = []
-	print(turn_queue)
+
 	while count < turn_queue.size():
 		var currentCheck = turn_queue[count]
 		if currentCheck.battleInfo.hp > 0:
