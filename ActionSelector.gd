@@ -1,7 +1,7 @@
 extends Node2D
 
 onready var actionLabel = $ActionLabel
-
+var battleData
 enum {
 	ACTION_SELECT,
 	ENEMY_SELECT
@@ -16,6 +16,7 @@ var enemyAnimationPlayer
 var relevantStat
 
 func _ready():
+	battleData = get_node("/root/BattleData")
 	randomize()
 	actions = get_node("Actions").get_children()
 	current_action = actions.pop_front()
@@ -36,10 +37,8 @@ func _process(_delta):
 				match current_action.get_name():
 					"Attack":
 						_attack_setup()
-						enemyAnimationPlayer.play("Selecting")
 					"Skill":
-						enemyAnimationPlayer.play("Selecting")
-						pass
+						_skill_setup()
 					"Style":
 						enemyAnimationPlayer.play("Selecting")
 						pass
@@ -148,6 +147,18 @@ func _attack_setup():
 	
 	state = ENEMY_SELECT
 	visible = false
+	enemyAnimationPlayer.play("Selecting")
+
+func _skill_setup():
+	#Get Character info
+	var stats = get_node("../").get_node("Stats")
+	relevantStat = stats.attack
+	var name = get_node("../").get_name()
+	print(battleData.data[name].skills)
+	
+#	populate the info panel with the different skills
+#	enemyAnimationPlayer.play("Selecting")
+	pass
 
 # Enemy Cycling Logic
 func _next_enemy():
