@@ -1,6 +1,7 @@
 extends Node2D
 
 onready var actionLabel = $ActionLabel
+onready var infoContainer = $ScrollContainer/Info
 var battleData
 enum {
 	ACTION_SELECT,
@@ -154,10 +155,20 @@ func _skill_setup():
 	var stats = get_node("../").get_node("Stats")
 	relevantStat = stats.attack
 	var name = get_node("../").get_name()
-	print(battleData.data[name].skills)
+	var skills = battleData.data[name].skills
+	var count = 0;
+	infoContainer.visible = true
+	while count < skills.size():
+		var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
+		var moveName = move.get_node("AttackTitle").get_node("Name")
+		moveName.text = skills[count].name
+		infoContainer.add_child(move)
+		print(moveName)
+		
 	
 #	populate the info panel with the different skills
 #	enemyAnimationPlayer.play("Selecting")
+		count += 1	
 	pass
 
 # Enemy Cycling Logic
@@ -184,5 +195,5 @@ func _attack_action():
 	
 #	Place enemy taking damage animation here
 #	Check if enemy dead
-	var battleNode = get_node("../../../")._on_ally_turn_end()
+	get_node("../../../")._on_ally_turn_end()
 	queue_free()

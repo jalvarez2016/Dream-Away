@@ -86,7 +86,7 @@ func _set_turn_order(characters):
 	turn_queue.sort_custom(MyCustomSorter, 'sort_decending')
 
 func _start_turn_sequence():
-	var action_selector = load("res://Utils/Action_Selector.tscn").instance()
+	var action_selector = load("res://Utils/ActionSelctor/Action_Selector.tscn").instance()
 	if currentTurn.name in playerNames:
 		var currentTurnNode = pContainer.get_node(currentTurn.name)
 		currentTurnNode.add_child(action_selector)
