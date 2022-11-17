@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Item.png-8b41d99429b98fe3b6f8afa9700ac548.stex"
+path="res://.import/Run.png-ff4f2ce1fb5c7d5611e5fe560afea503.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Utils/ActionSelctor/Item.png"
-dest_files=[ "res://.import/Item.png-8b41d99429b98fe3b6f8afa9700ac548.stex" ]
+source_file="res://Utils/ActionSelctor/Action Selector Icons/Run.png"
+dest_files=[ "res://.import/Run.png-ff4f2ce1fb5c7d5611e5fe560afea503.stex" ]
 
 [params]
 

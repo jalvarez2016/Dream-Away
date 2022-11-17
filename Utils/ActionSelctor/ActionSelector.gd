@@ -1,10 +1,11 @@
 extends Node2D
 
 onready var actionLabel = $ActionLabel
-onready var infoContainer = $ScrollContainer/Info
+onready var infoContainer = $ScrollContainer
 var battleData
 enum {
 	ACTION_SELECT,
+	SKILL_SELECT,
 	ENEMY_SELECT
 }
 var state = ACTION_SELECT
@@ -13,7 +14,8 @@ var current_action
 var enemies = []
 var current_enemy
 var enemyAnimationPlayer
-
+var skillLabels = []
+var currentSkill
 var relevantStat
 
 func _ready():
@@ -55,6 +57,17 @@ func _process(_delta):
 			elif Input.is_action_just_pressed("ui_back"):
 				# go back to the selection and closing any opened panels
 				pass
+		SKILL_SELECT:
+			print(currentSkill)
+			if Input.is_action_just_pressed("ui_back"):
+				state = ACTION_SELECT
+			elif Input.is_action_just_pressed("ui_down"):
+				_cycle_skills_down()
+			elif Input.is_action_just_pressed("ui_up"):
+				_cycle_skills_up()
+			elif Input.is_action_just_pressed("ui_action"):
+#				state = ENEMY_SELECT
+				print(currentSkill)
 		ENEMY_SELECT:
 			if Input.is_action_just_pressed("ui_right"):
 				_next_enemy()
@@ -137,6 +150,12 @@ func _rotate_left():
 	current_action = actions.pop_back()
 	_update_action_label(current_action.get_name())
 
+func _cycle_skills_down():
+	pass
+	
+func _cycle_skills_up():
+	pass
+
 func _update_action_label(updated_text):
 	actionLabel.text = updated_text;
 
@@ -162,13 +181,13 @@ func _skill_setup():
 		var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
 		var moveName = move.get_node("AttackTitle").get_node("Name")
 		moveName.text = skills[count].name
-		infoContainer.add_child(move)
-		print(moveName)
-		
-	
-#	populate the info panel with the different skills
-#	enemyAnimationPlayer.play("Selecting")
-		count += 1	
+		var mpAmount = move.get_node("MpTitle").get_node("Mp")
+		mpAmount.text = str(skills[count].mana)
+		infoContainer.get_node("Info").add_child(move)
+		skillLabels.push_back(move)
+		count += 1
+	currentSkill = skillLabels[0]
+	state = SKILL_SELECT
 	pass
 
 # Enemy Cycling Logic
