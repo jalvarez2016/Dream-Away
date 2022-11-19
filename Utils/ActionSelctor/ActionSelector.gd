@@ -9,14 +9,23 @@ enum {
 	ENEMY_SELECT
 }
 var state = ACTION_SELECT
-var actions
-var current_action
+
+#Enemy variables
 var enemies = []
 var current_enemy
 var enemyAnimationPlayer
+
+#Action variables
+var actions
+var current_action
+
+#Attack variables
+var relevantStat
+
+#Skill variables
 var skillLabels = []
 var currentSkill
-var relevantStat
+var selectedSkillData
 
 func _ready():
 	battleData = get_node("/root/BattleData")
@@ -188,16 +197,19 @@ func _skill_setup():
 	relevantStat = stats.attack
 	var name = get_node("../").get_name()
 	var skills = battleData.data[name].skills
+	var lvl = battleData.data[name].level
 	var count = 0;
 	infoContainer.visible = true
 	while count < skills.size() && skillLabels.size() < skills.size():
-		var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
-		var moveName = move.get_node("AttackTitle").get_node("Name")
-		moveName.text = skills[count].name
-		var mpAmount = move.get_node("MpTitle").get_node("Mp")
-		mpAmount.text = str(skills[count].mana)
-		infoContainer.get_node("Info").add_child(move)
-		skillLabels.push_back(move)
+		var skillData = skills[count]
+		if skillData.level_required <= lvl:
+			var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
+			var moveName = move.get_node("AttackTitle").get_node("Name")
+			moveName.text = skillData.name
+			var mpAmount = move.get_node("MpTitle").get_node("Mp")
+			mpAmount.text = str(skillData.mana)
+			infoContainer.get_node("Info").add_child(move)
+			skillLabels.push_back(move)
 		count += 1
 	currentSkill = skillLabels[0]
 	currentSkill.get_node("AnimationPlayer").play("Selecting")
