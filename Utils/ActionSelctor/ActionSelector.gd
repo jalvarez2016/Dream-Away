@@ -69,6 +69,7 @@ func _process(_delta):
 		SKILL_SELECT:
 			if Input.is_action_just_pressed("ui_back"):
 				state = ACTION_SELECT
+				_depopulate_info()
 				infoContainer.visible = false
 			elif Input.is_action_just_pressed("ui_down"):
 				_cycle_skills_down()
@@ -85,7 +86,6 @@ func _process(_delta):
 				_prev_enemy()
 				
 			if Input.is_action_just_pressed("ui_action"):
-				print(current_action)
 				match current_action.get_name():
 					"Attack":
 						_attack_action()
@@ -95,6 +95,7 @@ func _process(_delta):
 				# go back to the selection and closing any opened panels
 				state = ACTION_SELECT
 				enemyAnimationPlayer.play("RESET")
+				_depopulate_info()
 				pass
 		_:
 			print("Not a state")
@@ -171,12 +172,14 @@ func _cycle_skills_down():
 	currentSkill.get_node("AnimationPlayer").play("RESET")
 	skillLabels.push_back(skillLabels.pop_front())
 	currentSkill = skillLabels[0]
+	selectedSkillData = _get_skill_data(currentSkill.get_name())
 	currentSkill.get_node("AnimationPlayer").play("Selecting")
 	
 func _cycle_skills_up():
 	currentSkill.get_node("AnimationPlayer").play("RESET")
 	skillLabels.push_front(skillLabels.pop_back())
 	currentSkill = skillLabels[0]
+	selectedSkillData = _get_skill_data(currentSkill.get_name())
 	currentSkill.get_node("AnimationPlayer").play("Selecting")
 
 func _update_action_label(updated_text):
@@ -204,6 +207,7 @@ func _skill_setup():
 		var skillData = skills[count]
 		if skillData.level_required <= lvl:
 			var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
+			move.set_name(skillData.name)
 			var moveName = move.get_node("AttackTitle").get_node("Name")
 			moveName.text = skillData.name
 			var mpAmount = move.get_node("MpTitle").get_node("Mp")
@@ -212,8 +216,28 @@ func _skill_setup():
 			skillLabels.push_back(move)
 		count += 1
 	currentSkill = skillLabels[0]
+	selectedSkillData = _get_skill_data(currentSkill.get_name())
 	currentSkill.get_node("AnimationPlayer").play("Selecting")
 	state = SKILL_SELECT
+	
+func _get_skill_data(skill_name):
+	var name = get_node("../").get_name()
+	var skills = battleData.data[name].skills
+	var count = 0
+	var skillData
+	while count < skills.size():
+		if skills[count].name == skill_name:
+			skillData = skills[count]
+		count += 1
+	return skillData
+
+func _depopulate_info():
+	var infoStuff = infoContainer.get_node("Info")
+	var count = 0
+	while count < infoStuff.get_children().size():
+		infoStuff.get_children()[count].queue_free()
+		count += 1
+	skillLabels = []
 
 # Enemy Cycling Logic
 func _next_enemy():
@@ -244,4 +268,8 @@ func _attack_action():
 
 func _skill_action():
 	enemyAnimationPlayer.play("RESET")
-	pass
+	print(selectedSkillData)
+#	Place enemy taking damage animation here
+#	Check if enemy dead
+#	get_node("../../../")._on_ally_turn_end()
+#	queue_free()
