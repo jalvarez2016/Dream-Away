@@ -6,7 +6,8 @@ var battleData
 enum {
 	ACTION_SELECT,
 	SKILL_SELECT,
-	ENEMY_SELECT
+	ENEMY_SELECT,
+	ALLY_SELECT
 }
 var state = ACTION_SELECT
 
@@ -14,6 +15,11 @@ var state = ACTION_SELECT
 var enemies = []
 var current_enemy
 var enemyAnimationPlayer
+
+#Ally variables
+var allies = []
+var current_ally
+var allyAnimationPlayer
 
 #Action variables
 var actions
@@ -77,8 +83,12 @@ func _process(_delta):
 				_cycle_skills_up()
 			elif Input.is_action_just_pressed("ui_action"):
 				infoContainer.visible = false
-				enemyAnimationPlayer.play("Selecting")
-				state = ENEMY_SELECT
+				match selectedSkillData.hurt_enemies:
+					true:
+						enemyAnimationPlayer.play("Selecting")
+						state = ENEMY_SELECT
+					false:
+						state = ALLY_SELECT
 		ENEMY_SELECT:
 			if Input.is_action_just_pressed("ui_right"):
 				_next_enemy()
@@ -96,7 +106,24 @@ func _process(_delta):
 				state = ACTION_SELECT
 				enemyAnimationPlayer.play("RESET")
 				_depopulate_info()
+		ALLY_SELECT:
+			var numTargets = selectedSkillData.targets
+			if numTargets > allies.size():
 				pass
+#				Apply skill to all allies
+			else:
+				if Input.is_action_just_pressed("ui_right"):
+					_next_ally()
+				elif Input.is_action_just_pressed("ui_left"):
+					_prev_ally()
+					
+				if Input.is_action_just_pressed("ui_action"):
+					print("Ally based skill")
+				elif Input.is_action_just_pressed("ui_back"):
+					# go back to the selection and closing any opened panels
+					state = ACTION_SELECT
+	#				enemyAnimationPlayer.play("RESET")
+					_depopulate_info()
 		_:
 			print("Not a state")
 
@@ -254,6 +281,11 @@ func _prev_enemy():
 		enemies.push_front(current_enemy)
 		current_enemy = enemies.pop_back()
 
+func _next_ally():
+	pass
+
+func _prev_ally():
+	pass
 # Action methods are below
 func _attack_action():
 	enemyAnimationPlayer.play("RESET")
@@ -268,8 +300,31 @@ func _attack_action():
 
 func _skill_action():
 	enemyAnimationPlayer.play("RESET")
-	print(selectedSkillData)
+
+	match selectedSkillData.hurt_enemies:
+		true:
+			var enemyDefense = current_enemy.get_node("Stats").defense
+			var damageDelt = selectedSkillData.damage - (enemyDefense/ 1.1)
+			current_enemy._take_damage(damageDelt + (randi() % 5))
+		false:
+			var skillEffect = selectedSkillData.effect
+			match skillEffect:
+				"STUN":
+					print(skillEffect)
+				"HEAL":
+					print(skillEffect)
+				"FATIGUE":
+					print(skillEffect)
+				"HEAL_DAMAGE":
+					print(skillEffect)
+				"SHIELD":
+					print(skillEffect)
+				"REVIVE":
+					print(skillEffect)
+				"STOCK":
+					print(skillEffect)
+
 #	Place enemy taking damage animation here
 #	Check if enemy dead
-#	get_node("../../../")._on_ally_turn_end()
-#	queue_free()
+	get_node("../../../")._on_ally_turn_end()
+	queue_free()
