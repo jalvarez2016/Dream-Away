@@ -34,8 +34,8 @@ var currentSkill
 var selectedSkillData
 
 func _ready():
-	battleData = get_node("/root/BattleData")
 	randomize()
+	battleData = get_node("/root/BattleData")
 	actions = get_node("Actions").get_children()
 	current_action = actions.pop_front()
 
@@ -322,12 +322,19 @@ func _skill_action(_on_ally: bool):
 		var skillEffect = selectedSkillData.effect
 		match skillEffect:
 			"HEAL":
-				print("Healing: ", current_ally)
+				var amountHealed = get_node("../Stats").attack + (randi() % 5)
+				print("Healing this amount: ", amountHealed)
+				current_ally.get_node("Stats").hp += amountHealed
+				allyAnimationPlayer.play("RESET")
+#				Healing animation or sfx
 			"SHIELD":
 				print("Shielding: ", current_ally)
 			"REVIVE":
 				print("Reviving: ", current_ally)
 			
+		get_node("../../../")._on_ally_turn_end()
+		queue_free()
+
 		return
 
 	enemyAnimationPlayer.play("RESET")
