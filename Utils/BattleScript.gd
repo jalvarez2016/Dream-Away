@@ -130,7 +130,9 @@ func _on_enemy_turn_end():
 	match enemyStatus:
 		"STUN":
 			currentTurnNode._change_turn()
-			currentTurnNode._set_status('')
+			var isStillStunned = (randi() % 10) > 4
+			if isStillStunned:
+				currentTurnNode._set_status('')
 #			Add stunned animation and with change turn function call
 		_:
 			currentTurnNode._attack_animation()

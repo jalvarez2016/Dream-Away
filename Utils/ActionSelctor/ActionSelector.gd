@@ -38,9 +38,14 @@ func _ready():
 	randomize()
 	actions = get_node("Actions").get_children()
 	current_action = actions.pop_front()
+
 	enemies = get_tree().get_nodes_in_group("BattleInstance")
 	current_enemy = enemies.pop_front()
 	enemyAnimationPlayer = current_enemy.get_node("Sprite").get_node("AnimationPlayer")
+	
+	allies = get_tree().get_nodes_in_group("Ally")
+	current_ally = allies.pop_front()
+	allyAnimationPlayer = current_ally.get_node("AnimationPlayer")
 
 func _process(_delta):
 	match state:
@@ -51,7 +56,7 @@ func _process(_delta):
 				_rotate_left()
 				
 			if Input.is_action_just_pressed("ui_action"):
-		#		open currently selected actions' panels
+		#		open currently selected actions' panels or move onto enemy select
 				match current_action.get_name():
 					"Attack":
 						_attack_setup()
@@ -59,10 +64,8 @@ func _process(_delta):
 						_skill_setup()
 					"Style":
 						enemyAnimationPlayer.play("Selecting")
-						pass
 					"Item":
 						enemyAnimationPlayer.play("Selecting")
-						pass
 					"Run":
 						pass
 					_:
@@ -70,7 +73,7 @@ func _process(_delta):
 				print("selected: ", current_action.get_name())
 
 			elif Input.is_action_just_pressed("ui_back"):
-				# go back to the selection and closing any opened panels
+				# Invalid action shake animation and invalid action noise play
 				pass
 		SKILL_SELECT:
 			if Input.is_action_just_pressed("ui_back"):
@@ -88,6 +91,7 @@ func _process(_delta):
 						enemyAnimationPlayer.play("Selecting")
 						state = ENEMY_SELECT
 					false:
+						allyAnimationPlayer.play("Selecting")
 						state = ALLY_SELECT
 		ENEMY_SELECT:
 			if Input.is_action_just_pressed("ui_right"):
@@ -100,7 +104,7 @@ func _process(_delta):
 					"Attack":
 						_attack_action()
 					"Skill":
-						_skill_action()
+						_skill_action(false)
 			elif Input.is_action_just_pressed("ui_back"):
 				# go back to the selection and closing any opened panels
 				state = ACTION_SELECT
@@ -108,7 +112,7 @@ func _process(_delta):
 				_depopulate_info()
 		ALLY_SELECT:
 			var numTargets = selectedSkillData.targets
-			if numTargets > allies.size():
+			if numTargets > allies.size() || numTargets == -1:
 				pass
 #				Apply skill to all allies
 			else:
@@ -116,9 +120,8 @@ func _process(_delta):
 					_next_ally()
 				elif Input.is_action_just_pressed("ui_left"):
 					_prev_ally()
-					
 				if Input.is_action_just_pressed("ui_action"):
-					print("Ally based skill")
+					_skill_action(true)
 				elif Input.is_action_just_pressed("ui_back"):
 					# go back to the selection and closing any opened panels
 					state = ACTION_SELECT
@@ -282,10 +285,25 @@ func _prev_enemy():
 		current_enemy = enemies.pop_back()
 
 func _next_ally():
-	pass
+	if allies.size() == 0:
+		pass
+	else:
+		allyAnimationPlayer.play("RESET")
+		allies.push_back(current_ally)
+		current_ally = allies.pop_front()
+		allyAnimationPlayer = current_ally.get_node("AnimationPlayer")
+		allyAnimationPlayer.play("Selecting")
 
 func _prev_ally():
-	pass
+	if allies.size() == 0:
+		pass
+	else:
+		allyAnimationPlayer.play("RESET")
+		allies.push_front(current_ally)
+		current_ally = allies.pop_back()
+		allyAnimationPlayer = current_ally.get_node("AnimationPlayer")
+		allyAnimationPlayer.play("Selecting")
+
 # Action methods are below
 func _attack_action():
 	enemyAnimationPlayer.play("RESET")
@@ -298,7 +316,20 @@ func _attack_action():
 	get_node("../../../")._on_ally_turn_end()
 	queue_free()
 
-func _skill_action():
+func _skill_action(_on_ally: bool):
+	if _on_ally:
+		print(current_ally)
+		var skillEffect = selectedSkillData.effect
+		match skillEffect:
+			"HEAL":
+				print("Healing: ", current_ally)
+			"SHIELD":
+				print("Shielding: ", current_ally)
+			"REVIVE":
+				print("Reviving: ", current_ally)
+			
+		return
+
 	enemyAnimationPlayer.play("RESET")
 
 	if selectedSkillData.hurt_enemies:
@@ -310,18 +341,17 @@ func _skill_action():
 	match skillEffect:
 		"STUN":
 			current_enemy._set_status("STUN")
-		"HEAL":
-			print(skillEffect)
 		"FATIGUE":
-			print(skillEffect)
-		"HEAL_DAMAGE":
-			print(skillEffect)
-		"SHIELD":
-			print(skillEffect)
-		"REVIVE":
-			print(skillEffect)
-		"STOCK":
-			print(skillEffect)
+			pass
+#			Didn't document what this is supposed to do
+#			Make it skip a turn for the character that uses this
+#			Play a fatigued animation?
+
+#		The following are style attacks and will not be implemented in this function
+#		"STOCK":
+#			print(skillEffect)
+#		"HEAL_DAMAGE":
+#			print(skillEffect)
 
 #	Place enemy taking damage animation here
 #	Check if enemy dead

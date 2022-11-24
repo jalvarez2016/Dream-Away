@@ -244,7 +244,7 @@ var data = {
 				"level_required": 20,
 				"damage": 160,
 				"targets": -1,
-				"hurt_enemies": false,
+				"hurt_enemies": true,
 				"mana": 20,
 				"effect": "FATIGUE"
 			}
