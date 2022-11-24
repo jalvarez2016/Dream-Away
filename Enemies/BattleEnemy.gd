@@ -4,6 +4,12 @@ onready var turnManager = load("res://Utils/TurnManager.gd").new()
 onready var stats = $Stats
 onready var animationPlayer = $Sprite/AnimationPlayer
 
+func _get_status():
+	return stats.status
+
+func _set_status(status: String):
+	stats.status = status
+
 func _take_damage(_amount: int):
 	stats.hp -= _amount
 

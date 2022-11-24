@@ -290,7 +290,7 @@ func _prev_ally():
 func _attack_action():
 	enemyAnimationPlayer.play("RESET")
 	var enemyDefense = current_enemy.get_node("Stats").defense
-	var damageDelt = relevantStat - (enemyDefense/ 1.5)
+	var damageDelt = relevantStat - (enemyDefense/ 1.2)
 	current_enemy._take_damage(damageDelt + (randi() % 5))
 	
 #	Place enemy taking damage animation here
@@ -301,28 +301,27 @@ func _attack_action():
 func _skill_action():
 	enemyAnimationPlayer.play("RESET")
 
-	match selectedSkillData.hurt_enemies:
-		true:
-			var enemyDefense = current_enemy.get_node("Stats").defense
-			var damageDelt = selectedSkillData.damage - (enemyDefense/ 1.1)
-			current_enemy._take_damage(damageDelt + (randi() % 5))
-		false:
-			var skillEffect = selectedSkillData.effect
-			match skillEffect:
-				"STUN":
-					print(skillEffect)
-				"HEAL":
-					print(skillEffect)
-				"FATIGUE":
-					print(skillEffect)
-				"HEAL_DAMAGE":
-					print(skillEffect)
-				"SHIELD":
-					print(skillEffect)
-				"REVIVE":
-					print(skillEffect)
-				"STOCK":
-					print(skillEffect)
+	if selectedSkillData.hurt_enemies:
+		var enemyDefense = current_enemy.get_node("Stats").defense
+		var damageDelt = selectedSkillData.damage - (enemyDefense/ 1.5)
+		current_enemy._take_damage(damageDelt + (randi() % 5))
+
+	var skillEffect = selectedSkillData.effect
+	match skillEffect:
+		"STUN":
+			current_enemy._set_status("STUN")
+		"HEAL":
+			print(skillEffect)
+		"FATIGUE":
+			print(skillEffect)
+		"HEAL_DAMAGE":
+			print(skillEffect)
+		"SHIELD":
+			print(skillEffect)
+		"REVIVE":
+			print(skillEffect)
+		"STOCK":
+			print(skillEffect)
 
 #	Place enemy taking damage animation here
 #	Check if enemy dead

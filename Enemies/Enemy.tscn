@@ -95,6 +95,7 @@ anims/Selecting = SubResource( 7 )
 shape = SubResource( 2 )
 
 [node name="Stats" parent="." instance=ExtResource( 3 )]
+hp = 30
 
 [node name="HitBox" type="Area2D" parent="."]
 

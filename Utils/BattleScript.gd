@@ -123,18 +123,26 @@ func _on_enemy_turn_end():
 	var selectedPlayerDef = selectedPlayerStats.defense
 	
 	var currentTurnNode = eContainer.get_node(currentTurn.name)
-	var enemyAttackStat = currentTurnNode.get_node("Stats").attack
-	currentTurnNode._attack_animation()
-
-	var calculateDamage
-	if (selectedPlayerDef * .8) > enemyAttackStat:
-		calculateDamage = enemyAttackStat / 2
-	else:
-		calculateDamage = (enemyAttackStat - round(selectedPlayerDef * 0.8)) + (randi() % 5)
-
-	selectedPlayerStats.hp = selectedPlayerStats.hp - calculateDamage
-#	Player takes damage animation here
+	var enemyStats = currentTurnNode.get_node("Stats")
+	var enemyAttackStat = enemyStats.attack
+	var enemyStatus = enemyStats.status
 	
+	match enemyStatus:
+		"STUN":
+			currentTurnNode._change_turn()
+			currentTurnNode._set_status('')
+#			Add stunned animation and with change turn function call
+		_:
+			currentTurnNode._attack_animation()
+			var calculateDamage
+			if (selectedPlayerDef * .8) > enemyAttackStat:
+				calculateDamage = enemyAttackStat / 2
+			else:
+				calculateDamage = (enemyAttackStat - round(selectedPlayerDef * 0.8)) + (randi() % 5)
+
+			selectedPlayerStats.hp = selectedPlayerStats.hp - calculateDamage
+			#Player takes damage animation here
+
 func _swap_turn():
 	match turnManager.turn:
 		0:

@@ -6,3 +6,4 @@ export(int) var defense = 10
 export(int) var mp = 10
 export(int) var agility = 10
 export(int) var speed = 10
+export(String) var status
