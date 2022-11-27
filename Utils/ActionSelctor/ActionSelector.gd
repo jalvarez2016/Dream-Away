@@ -1,7 +1,7 @@
 extends Node2D
 
 onready var actionLabel = $ActionLabel
-onready var infoContainer = $ScrollContainer
+onready var infoContainer = $InfoContainer
 var battleData
 enum {
 	ACTION_SELECT,
@@ -238,7 +238,7 @@ func _skill_setup():
 		if skillData.level_required <= lvl:
 			var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
 			move.set_name(skillData.name)
-			infoContainer.get_node("Info").add_child(move)
+			infoContainer.get_node("ScrollContainer/Info").add_child(move)
 			move._set_move_data(
 				skillData.name,
 				"res://Utils/Skill Icons/Skill_Attack_Icon.png",
@@ -264,7 +264,7 @@ func _style_setup():
 		if styleMoveData.level_required <= lvl:
 			var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
 			move.set_name(styleMoveData.name)
-			infoContainer.get_node("Info").add_child(move)
+			infoContainer.get_node("ScrollContainer/Info").add_child(move)
 			move._set_move_data(
 				styleMoveData.name,
 				"res://Utils/Skill Icons/Skill_Attack_Icon.png",
@@ -283,19 +283,22 @@ func _item_setup():
 	var itemList = battleData.data.items
 	var count = 0;
 	infoContainer.visible = true
+	var description = $InfoContainer/Descriptor/Description
 	while count < itemList.size():
 		var item = itemList[count]
 		var itemSelect = load("res://Utils/ActionSelctor/ItemSelect.tscn").instance()
 		itemSelect.set_name(item.name)
-		infoContainer.get_node("Info").add_child(itemSelect)
+		infoContainer.get_node("ScrollContainer/Info").add_child(itemSelect)
 		itemSelect._set_item_data(
 			item.name,
-			"res://Utils/Skill Icons/Skill_Attack_Icon.png"
+			"res://Utils/Skill Icons/Skill_Attack_Icon.png",
+			item.amount
 		)
 		skillLabels.push_back(itemSelect)
 		count += 1
 	currentSkill = skillLabels[0]
-	selectedSkillData = _get_skill_data(currentSkill.get_name())
+	var selectedData = _get_item_info(currentSkill.get_name())
+	description.text = selectedData.info
 	currentSkill.get_node("AnimationPlayer").play("Selecting")
 	state = SKILL_SELECT
 	pass
@@ -311,8 +314,13 @@ func _get_skill_data(skill_name):
 		count += 1
 	return skillData
 
+func _get_item_info(item_name):
+	return battleData.itemGlossary[item_name]
+
 func _depopulate_info():
-	var infoStuff = infoContainer.get_node("Info")
+	var description = $InfoContainer/Descriptor/Description
+	description.text = ""
+	var infoStuff = infoContainer.get_node("ScrollContainer/Info")
 	var count = 0
 	while count < infoStuff.get_children().size():
 		infoStuff.get_children()[count].queue_free()

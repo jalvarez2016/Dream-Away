@@ -286,10 +286,17 @@ var data = {
 		{
 			"name": "Healing Herb",
 			"amount": 1,
+		}
+	]
+}
+
+var itemGlossary = {
+	"Healing Herb" : {
+			"name": "Healing Herb",
 			"effect": "HEAL",
 			"targets": 1,
 			"heal_amount": 30,
-			"info": "Heals one ally in the party by 30 health points"
-		}
-	]
+			"info": "Heals one ally in the party by 30 health points",
+			"icon": "res://Utils/Skill Icons/Skill_Attack_Icon.png"
+	}
 }

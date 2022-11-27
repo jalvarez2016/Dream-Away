@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Utils/ActionSelctor/ActionSelector.gd" type="Script" id=1]
 [ext_resource path="res://Utils/ActionSelctor/Action Selector Icons/Skill.png" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://Utils/ActionSelctor/Action Selector Icons/Item.png" type="Texture" id=5]
 [ext_resource path="res://Utils/ActionSelctor/Action Selector Icons/Style.png" type="Texture" id=6]
 [ext_resource path="res://Fonts/Bungee.tres" type="DynamicFont" id=7]
+[ext_resource path="res://Fonts/Trispace.tres" type="DynamicFont" id=8]
+[ext_resource path="res://Fonts/Rubik.tres" type="DynamicFont" id=9]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -30,10 +32,15 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.0901961, 0.0901961, 0.0901961, 1 )
 border_blend = true
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0.188235, 0.188235, 0.188235, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.0901961, 0.0901961, 0.0901961, 1 )
+border_blend = true
 
 [node name="Action Selector" type="Node2D"]
 position = Vector2( 0, -35 )
@@ -108,19 +115,54 @@ texture = ExtResource( 4 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Actions/Run"]
 shape = SubResource( 5 )
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="InfoContainer" type="Panel" parent="."]
 visible = false
-margin_left = 40.0
-margin_top = -10.0
-margin_right = 136.0
-margin_bottom = 70.0
+margin_left = 42.0
+margin_top = -8.0
+margin_right = 42.0
+margin_bottom = -8.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="InfoContainer"]
+margin_left = -2.0
+margin_top = -2.0
+margin_right = 94.0
+margin_bottom = 43.0
 custom_styles/bg = SubResource( 8 )
 follow_focus = true
 
-[node name="Info" type="VBoxContainer" parent="ScrollContainer"]
+[node name="Info" type="VBoxContainer" parent="InfoContainer/ScrollContainer"]
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 94.0
-margin_bottom = 78.0
+margin_bottom = 43.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Descriptor" type="Panel" parent="InfoContainer"]
+margin_left = -2.0
+margin_top = 43.0
+margin_right = 94.0
+margin_bottom = 63.0
+custom_styles/panel = SubResource( 9 )
+
+[node name="Title" type="Label" parent="InfoContainer/Descriptor"]
+margin_left = 3.0
+margin_top = 1.0
+margin_right = 92.0
+margin_bottom = 6.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 9 )
+text = "Description"
+autowrap = true
+uppercase = true
+
+[node name="Description" type="Label" parent="InfoContainer/Descriptor"]
+margin_left = 3.0
+margin_top = 8.0
+margin_right = 92.0
+margin_bottom = 13.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 8 )
+text = "Description of the item"
+autowrap = true
+uppercase = true
