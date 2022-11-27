@@ -65,7 +65,7 @@ func _process(_delta):
 					"Style":
 						_style_setup()
 					"Item":
-						enemyAnimationPlayer.play("Selecting")
+						_item_setup()
 					"Run":
 						pass
 					_:
@@ -277,6 +277,28 @@ func _style_setup():
 	selectedSkillData = _get_skill_data(currentSkill.get_name())
 	currentSkill.get_node("AnimationPlayer").play("Selecting")
 	state = SKILL_SELECT
+
+func _item_setup():
+	print(battleData.data.items)
+	var itemList = battleData.data.items
+	var count = 0;
+	infoContainer.visible = true
+	while count < itemList.size():
+		var item = itemList[count]
+		var itemSelect = load("res://Utils/ActionSelctor/ItemSelect.tscn").instance()
+		itemSelect.set_name(item.name)
+		infoContainer.get_node("Info").add_child(itemSelect)
+		itemSelect._set_item_data(
+			item.name,
+			"res://Utils/Skill Icons/Skill_Attack_Icon.png"
+		)
+		skillLabels.push_back(itemSelect)
+		count += 1
+	currentSkill = skillLabels[0]
+	selectedSkillData = _get_skill_data(currentSkill.get_name())
+	currentSkill.get_node("AnimationPlayer").play("Selecting")
+	state = SKILL_SELECT
+	pass
 
 func _get_skill_data(skill_name):
 	var name = get_node("../").get_name()

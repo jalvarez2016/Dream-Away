@@ -282,5 +282,14 @@ var data = {
 		"level": 1,
 		"status": "nomral"
 	},
-	"items": []
+	"items": [
+		{
+			"name": "Healing Herb",
+			"amount": 1,
+			"effect": "HEAL",
+			"targets": 1,
+			"heal_amount": 30,
+			"info": "Heals one ally in the party by 30 health points"
+		}
+	]
 }
