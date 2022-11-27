@@ -63,7 +63,7 @@ func _process(_delta):
 					"Skill":
 						_skill_setup()
 					"Style":
-						enemyAnimationPlayer.play("Selecting")
+						_style_setup()
 					"Item":
 						enemyAnimationPlayer.play("Selecting")
 					"Run":
@@ -238,18 +238,46 @@ func _skill_setup():
 		if skillData.level_required <= lvl:
 			var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
 			move.set_name(skillData.name)
-			var moveName = move.get_node("AttackTitle").get_node("Name")
-			moveName.text = skillData.name
-			var mpAmount = move.get_node("MpTitle").get_node("Mp")
-			mpAmount.text = str(skillData.mana)
 			infoContainer.get_node("Info").add_child(move)
+			move._set_move_data(
+				skillData.name,
+				"res://Utils/Skill Icons/Skill_Attack_Icon.png",
+				str(skillData.mana),
+				"res://Utils/Skill Icons/Skill_Attack_Icon.png"
+			)
 			skillLabels.push_back(move)
 		count += 1
 	currentSkill = skillLabels[0]
 	selectedSkillData = _get_skill_data(currentSkill.get_name())
 	currentSkill.get_node("AnimationPlayer").play("Selecting")
 	state = SKILL_SELECT
-	
+
+func _style_setup():
+#	var stats = get_node("../").get_node("Stats")
+	var name = get_node("../").get_name()
+	var styleSkills = battleData.data[name].style
+	var lvl = battleData.data[name].level
+	var count = 0;
+	infoContainer.visible = true
+	while count < styleSkills.size() && skillLabels.size() < styleSkills.size():
+		var styleMoveData = styleSkills[count]
+		if styleMoveData.level_required <= lvl:
+			var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
+			move.set_name(styleMoveData.name)
+			infoContainer.get_node("Info").add_child(move)
+			move._set_move_data(
+				styleMoveData.name,
+				"res://Utils/Skill Icons/Skill_Attack_Icon.png",
+				str(styleMoveData.style_points),
+				"res://Utils/Skill Icons/Skill_Attack_Icon.png"
+			)
+			skillLabels.push_back(move)
+		count += 1
+	currentSkill = skillLabels[0]
+	selectedSkillData = _get_skill_data(currentSkill.get_name())
+	currentSkill.get_node("AnimationPlayer").play("Selecting")
+	state = SKILL_SELECT
+
 func _get_skill_data(skill_name):
 	var name = get_node("../").get_name()
 	var skills = battleData.data[name].skills

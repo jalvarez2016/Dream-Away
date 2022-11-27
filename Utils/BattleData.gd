@@ -252,7 +252,7 @@ var data = {
 		"style": [
 			{
 				"name": "BEAST ROAR",
-				"level_required": 12,
+				"level_required": 0,
 				"damage": 80,
 				"targets": -1,
 				"hurt_enemies": true,
