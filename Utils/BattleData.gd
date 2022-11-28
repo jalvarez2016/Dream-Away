@@ -145,7 +145,8 @@ var data = {
 		],
 		"exp": 0,
 		"level": 1,
-		"status": "normal"
+		"status": "normal",
+		"shield": 0
 	},
 	"Lia": {
 		"skills": [
@@ -224,7 +225,8 @@ var data = {
 		],
 		"exp": 0,
 		"level": 1,
-		"status": "nomral"
+		"status": "nomral",
+		"shield": 0
 	},
 	"Seigi": {
 		"skills": [
@@ -305,7 +307,8 @@ var data = {
 		],
 		"exp": 0,
 		"level": 1,
-		"status": "nomral"
+		"status": "nomral",
+		"shield": 0
 	},
 	"items": [
 		{

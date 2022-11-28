@@ -3,6 +3,7 @@ extends Node2D
 onready var turnManager = load("res://Utils/TurnManager.gd").new()
 var playerNames = ["Seigi", "Player", "Lia"]
 var level_parameters
+var battleData
 var everyone = []
 var turn_queue = []
 var currentTurn
@@ -18,6 +19,7 @@ class MyCustomSorter:
 
 func _ready():
 	randomize()
+	battleData = get_node("/root/BattleData")
 	var players = level_parameters.players
 	var enemies = level_parameters.enemies
 	var counter = 0
@@ -53,11 +55,11 @@ func _create_player(nodeData, index):
 	stats.speed = nodeData.battleInfo.speed
 	sprite.texture = newSprite
 	
-#	Loading correct animations into AnimationPlayer
-#	https://docs.godotengine.org/en/stable/classes/class_animationplayer.html#class-animationplayer-method-add-animation
-#	https://stackoverflow.com/questions/73257252/how-do-i-programmatically-load-animations-in-godot-separating-animation-from-ar
-	
-#	Set individual player position
+	#	Loading correct animations into AnimationPlayer
+	#	https://docs.godotengine.org/en/stable/classes/class_animationplayer.html#class-animationplayer-method-add-animation
+	#	https://stackoverflow.com/questions/73257252/how-do-i-programmatically-load-animations-in-godot-separating-animation-from-ar
+		
+	#	Set individual player position
 	battlePlayer.position = Vector2(50, 50 * index + 30)
 	pContainer.add_child(battlePlayer)
 
@@ -67,7 +69,7 @@ func _create_enemy(nodeData, index, amount):
 	var sprite = battleEnemy.get_node("Sprite")
 	var newSprite = load(nodeData.sprite)
 	
-#	Set individual player stats
+	#	Set individual player stats
 	battleEnemy.set_name(nodeData.name)
 	stats.hp = nodeData.battleInfo.hp
 	stats.attack = nodeData.battleInfo.attack
@@ -76,8 +78,8 @@ func _create_enemy(nodeData, index, amount):
 	stats.agility = nodeData.battleInfo.agility
 	stats.speed = nodeData.battleInfo.speed
 	sprite.texture = newSprite
-	
-#	Set individual player position
+		
+	#	Set individual player position
 	battleEnemy.position = Vector2(220, (120/amount + 2) * index + 60)
 	eContainer.add_child(battleEnemy)
 
@@ -133,17 +135,23 @@ func _on_enemy_turn_end():
 			var isStillStunned = (randi() % 10) > 4
 			if isStillStunned:
 				currentTurnNode._set_status('')
-#			Add stunned animation and with change turn function call
+			#			Add stunned animation and with change turn function call
 		_:
 			currentTurnNode._attack_animation()
 			var calculateDamage
-			if (selectedPlayerDef * .8) > enemyAttackStat:
-				calculateDamage = enemyAttackStat / 2
+			var name = selectedPlayer.get_name()
+			var shields = battleData.data[name].shield
+			print(shields)
+			if shields > 0:
+				battleData.data[name].shield -= 1
 			else:
-				calculateDamage = (enemyAttackStat - round(selectedPlayerDef * 0.8)) + (randi() % 5)
+				if (selectedPlayerDef * .8) > enemyAttackStat:
+					calculateDamage = enemyAttackStat / 2
+				else:
+					calculateDamage = (enemyAttackStat - round(selectedPlayerDef * 0.8)) + (randi() % 5)
 
-			selectedPlayerStats.hp = selectedPlayerStats.hp - calculateDamage
-			#Player takes damage animation here
+				selectedPlayerStats.hp = selectedPlayerStats.hp - calculateDamage
+				#Player takes damage animation here
 
 func _swap_turn():
 	match turnManager.turn:

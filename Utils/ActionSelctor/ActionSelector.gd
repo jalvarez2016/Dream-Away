@@ -83,9 +83,9 @@ func _process(_delta):
 				_depopulate_info()
 				infoContainer.visible = false
 			elif Input.is_action_just_pressed("ui_down"):
-				_cycle_skills_down()
+				_cycle_labels_down()
 			elif Input.is_action_just_pressed("ui_up"):
-				_cycle_skills_up()
+				_cycle_labels_up()
 			elif Input.is_action_just_pressed("ui_action"):
 				infoContainer.visible = false
 				match selectedData.hurt_enemies:
@@ -101,9 +101,9 @@ func _process(_delta):
 				_depopulate_info()
 				infoContainer.visible = false
 			elif Input.is_action_just_pressed("ui_down"):
-				_cycle_skills_down()
+				_cycle_labels_down()
 			elif Input.is_action_just_pressed("ui_up"):
-				_cycle_skills_up()
+				_cycle_labels_up()
 			elif Input.is_action_just_pressed("ui_action"):
 				infoContainer.visible = false
 				match selectedData.hurt_enemies:
@@ -119,9 +119,9 @@ func _process(_delta):
 				_depopulate_info()
 				infoContainer.visible = false
 			elif Input.is_action_just_pressed("ui_down"):
-				_cycle_skills_down()
+				_cycle_labels_down()
 			elif Input.is_action_just_pressed("ui_up"):
-				_cycle_skills_up()
+				_cycle_labels_up()
 			elif Input.is_action_just_pressed("ui_action"):
 				infoContainer.visible = false
 				match selectedData.hurt_enemies:
@@ -142,7 +142,7 @@ func _process(_delta):
 					"Attack":
 						_attack_action()
 					"Skill":
-						_skill_action(false)
+						_skill_action(false, false)
 			elif Input.is_action_just_pressed("ui_back"):
 				# go back to the selection and closing any opened panels
 				state = ACTION_SELECT
@@ -151,15 +151,14 @@ func _process(_delta):
 		ALLY_SELECT:
 			var numTargets = selectedData.targets
 			if numTargets > allies.size() || numTargets == -1:
-				pass
-#				Apply skill to all allies
+				_skill_action(true, true)
 			else:
 				if Input.is_action_just_pressed("ui_right"):
 					_next_ally()
 				elif Input.is_action_just_pressed("ui_left"):
 					_prev_ally()
 				if Input.is_action_just_pressed("ui_action"):
-					_skill_action(true)
+					_skill_action(true, false)
 				elif Input.is_action_just_pressed("ui_back"):
 					# go back to the selection and closing any opened panels
 					state = ACTION_SELECT
@@ -236,19 +235,35 @@ func _rotate_left():
 	current_action = actions.pop_back()
 	_update_action_label(current_action.get_name())
 
-func _cycle_skills_down():
+func _cycle_labels_down():
 	currentSelect.get_node("AnimationPlayer").play("RESET")
 	Labels.push_back(Labels.pop_front())
 	currentSelect = Labels[0]
-	selectedData = _get_skill_data(currentSelect.get_name())
+	match current_action.get_name():
+		"Skill":
+			selectedData = _get_skill_data(currentSelect.get_name())
+		"Style":
+			selectedData = _get_style_data(currentSelect.get_name())
+		"Item":
+			selectedData = _get_item_info(currentSelect.get_name())
 	currentSelect.get_node("AnimationPlayer").play("Selecting")
+	var description = $InfoContainer/Descriptor/VBoxContainer/Description
+	description.text = selectedData.info
 	
-func _cycle_skills_up():
+func _cycle_labels_up():
 	currentSelect.get_node("AnimationPlayer").play("RESET")
 	Labels.push_front(Labels.pop_back())
 	currentSelect = Labels[0]
-	selectedData = _get_skill_data(currentSelect.get_name())
+	match current_action.get_name():
+		"Skill":
+			selectedData = _get_skill_data(currentSelect.get_name())
+		"Style":
+			selectedData = _get_style_data(currentSelect.get_name())
+		"Item":
+			selectedData = _get_item_info(currentSelect.get_name())
 	currentSelect.get_node("AnimationPlayer").play("Selecting")
+	var description = $InfoContainer/Descriptor/VBoxContainer/Description
+	description.text = selectedData.info
 
 func _update_action_label(updated_text):
 	actionLabel.text = updated_text;
@@ -303,6 +318,7 @@ func _populate_info(items, type):
 					)
 					Labels.push_back(move)
 		count += 1
+#	CRASH on the Labels array being empty
 	currentSelect = Labels[0]
 	match type:
 		"ITEM":
@@ -311,7 +327,6 @@ func _populate_info(items, type):
 			selectedData = _get_skill_data(currentSelect.get_name())
 		"STYLE":
 			selectedData = _get_style_data(currentSelect.get_name())
-	print(selectedData)
 	description.text = selectedData.info
 
 func _attack_setup():
@@ -339,7 +354,6 @@ func _style_setup():
 
 func _item_setup():
 	var itemList = battleData.data.items
-	var count = 0;
 	_populate_info(itemList, "ITEM")
 	currentSelect.get_node("AnimationPlayer").play("Selecting")
 	state = ITEM_SELECT
@@ -426,26 +440,47 @@ func _attack_action():
 	get_node("../../../")._on_ally_turn_end()
 	queue_free()
 
-func _skill_action(_on_ally: bool):
+func _skill_action(_on_ally: bool, all: bool):
 	if _on_ally:
-		print(current_ally)
-		var skillEffect = selectedData.effect
-		match skillEffect:
-			"HEAL":
-				var amountHealed = get_node("../Stats").attack + (randi() % 5)
-				print("Healing this amount: ", amountHealed)
-				current_ally.get_node("Stats").hp += amountHealed
-				allyAnimationPlayer.play("RESET")
-#				Healing animation or sfx
-			"SHIELD":
-				print("Shielding: ", current_ally)
-			"REVIVE":
-				print("Reviving: ", current_ally)
-			
-		get_node("../../../")._on_ally_turn_end()
-		queue_free()
+		if all:
+			var skillEffect = selectedData.effect
+			match skillEffect:
+				"HEAL":
+					pass
+				"SHIELD":
+					var count = 0
+					while count < allies.size():
+						var name = allies[count].get_name()
+						battleData.data[name].shield += 1
+						count += 1
+					allyAnimationPlayer.play("RESET")
+				"REVIVE":
+					print("Reviving: ", current_ally)
+				
+			get_node("../../../")._on_ally_turn_end()
+			queue_free()
+		else:
+			print(current_ally)
+			var skillEffect = selectedData.effect
+			match skillEffect:
+				"HEAL":
+					var amountHealed = get_node("../Stats").attack + (randi() % 5)
+					print("Healing this amount: ", amountHealed)
+					current_ally.get_node("Stats").hp += amountHealed
+					allyAnimationPlayer.play("RESET")
+	#				Healing animation and sfx
+				"SHIELD":
+	#				print("Shielding: ", current_ally)
+					allyAnimationPlayer.play("RESET")
+					var name = current_ally.get_name()
+					battleData.data[name].shield += 1
+				"REVIVE":
+					print("Reviving: ", current_ally)
+				
+			get_node("../../../")._on_ally_turn_end()
+			queue_free()
 
-		return
+			return
 
 	enemyAnimationPlayer.play("RESET")
 

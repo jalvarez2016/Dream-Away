@@ -116,6 +116,7 @@ texture = ExtResource( 4 )
 shape = SubResource( 5 )
 
 [node name="InfoContainer" type="Panel" parent="."]
+visible = false
 margin_left = 42.0
 margin_top = -8.0
 margin_right = 42.0
