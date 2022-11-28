@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Utils/ActionSelctor/ActionSelector.gd" type="Script" id=1]
 [ext_resource path="res://Utils/ActionSelctor/Action Selector Icons/Skill.png" type="Texture" id=2]
@@ -9,6 +9,13 @@
 [ext_resource path="res://Fonts/Bungee.tres" type="DynamicFont" id=7]
 [ext_resource path="res://Fonts/Trispace.tres" type="DynamicFont" id=8]
 [ext_resource path="res://Fonts/Rubik.tres" type="DynamicFont" id=9]
+[ext_resource path="res://Utils/ActionSelctor/Action Selector Icons/Flash.gdshader" type="Shader" id=10]
+[ext_resource path="res://Utils/ActionSelctor/Action Selector Icons/Flash.tres" type="Material" id=11]
+
+[sub_resource type="ShaderMaterial" id=11]
+shader = ExtResource( 10 )
+shader_param/color = null
+shader_param/flashState = 0.0
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -68,6 +75,7 @@ scale = Vector2( 0.3, 0.3 )
 z_index = 2
 
 [node name="AttackSprite" type="Sprite" parent="Actions/Attack"]
+material = SubResource( 11 )
 texture = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Actions/Attack"]
@@ -79,6 +87,7 @@ scale = Vector2( 0.1, 0.1 )
 z_index = 1
 
 [node name="Skill" type="Sprite" parent="Actions/Skill"]
+material = ExtResource( 11 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Actions/Skill"]
@@ -89,6 +98,7 @@ position = Vector2( 10, 0 )
 scale = Vector2( 0.1, 0.1 )
 
 [node name="Style" type="Sprite" parent="Actions/Style"]
+material = ExtResource( 11 )
 texture = ExtResource( 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Actions/Style"]
@@ -99,6 +109,8 @@ position = Vector2( -10, 0 )
 scale = Vector2( 0.1, 0.1 )
 
 [node name="Item" type="Sprite" parent="Actions/Item"]
+material = ExtResource( 11 )
+scale = Vector2( 1, 1 )
 texture = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Actions/Item"]
@@ -110,6 +122,7 @@ scale = Vector2( 0.1, 0.1 )
 z_index = 1
 
 [node name="Run" type="Sprite" parent="Actions/Run"]
+material = ExtResource( 11 )
 texture = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Actions/Run"]

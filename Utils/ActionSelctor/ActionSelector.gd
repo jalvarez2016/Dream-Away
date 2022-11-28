@@ -235,6 +235,9 @@ func _rotate_left():
 	current_action = actions.pop_back()
 	_update_action_label(current_action.get_name())
 
+func _disable_action():
+	pass
+	
 func _cycle_labels_down():
 	currentSelect.get_node("AnimationPlayer").play("RESET")
 	Labels.push_back(Labels.pop_front())
