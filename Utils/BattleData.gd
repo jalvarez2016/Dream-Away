@@ -57,7 +57,8 @@ var data = {
 				"targets": 1,
 				"hurt_enemies": false,
 				"mana": 10,
-				"effect": "HEAL" 
+				"effect": "HEAL",
+				"info": "Heals a single target"
 			},
 			{
 				"name": "Heal Drain",
@@ -66,7 +67,8 @@ var data = {
 				"targets": 1,
 				"hurt_enemies": true,
 				"mana": 10,
-				"effect": "HEAL_DAMAGE"
+				"effect": "HEAL_DAMAGE",
+				"info": "Drains health from an enemy and uses it to heal themselves."
 			},
 			{
 				"name": "Barrier",
@@ -75,7 +77,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": false,
 				"mana": 12,
-				"effect": "SHIELD" 
+				"effect": "SHIELD",
+				"info": "Creates shields for all allies."
 			},
 			{
 				"name": "Group Heal",
@@ -84,7 +87,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": false,
 				"mana": 18,
-				"effect": "HEAL" 
+				"effect": "HEAL",
+				"info": "Heals all members in the party."
 			},
 			{
 				"name": "Revive",
@@ -93,7 +97,8 @@ var data = {
 				"targets": 1,
 				"hurt_enemies": false,
 				"mana": 25,
-				"effect": "REVIVE" 
+				"effect": "REVIVE",
+				"info": "Revives a single party member."
 			},
 		],
 		"style": [
@@ -104,16 +109,18 @@ var data = {
 				"targets": 0,
 				"hurt_enemies": false,
 				"style_points": 80,
-				"effect": "STOCK" 
+				"effect": "STOCK",
+				"info": "Adds health to a storage of health that can be used later for healing or damage."
 			},
 			{
 				"name": "Drain Stock",
 				"level_required": 12,
 				"damage": 45,
-				"targets": 0,
+				"targets": 1,
 				"hurt_enemies": false,
 				"style_points": 40,
-				"effect": "STOCK" 
+				"effect": "STOCK",
+				"info": "Drains health from an enemy and adds it to a storage of health that can be used later for healing or damage."
 			},
 			{
 				"name": "Heathing Sunshine",
@@ -122,7 +129,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": false,
 				"style_points": 20,
-				"effect": "HEAL" 
+				"effect": "HEAL",
+				"info": "Uses the health stored in the health stock to heal all party members equally up to the amount in the health stock. Whatever is not used remains in the health stock for later use."
 			},
 			{
 				"name": "Day of Rebirth",
@@ -131,7 +139,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": false,
 				"style_points": 60,
-				"effect": "REVIVE" 
+				"effect": "REVIVE",
+				"info": "Resurrects all defeated party members at 50% health."
 			},
 		],
 		"exp": 0,
@@ -147,7 +156,8 @@ var data = {
 				"targets": 1,
 				"hurt_enemies": true,
 				"mana": 10,
-				"effect": "STUN" 
+				"effect": "STUN",
+				"info": "Slams a hammer conjured up with magic down on an enemy."
 			},
 			{
 				"name": "Shadow Spear",
@@ -156,7 +166,8 @@ var data = {
 				"targets": 1,
 				"hurt_enemies": true,
 				"mana": 15,
-				"effect": null
+				"effect": null,
+				"info": "Shoots a spear created with magic at an enemy."
 			},
 			{
 				"name": "Pain Rain",
@@ -165,7 +176,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": true,
 				"mana": 15,
-				"effect": "SHIELD" 
+				"effect": "SHIELD",
+				"info": "Rains down needles on all enemies while making making shields for your party."
 			},
 			{
 				"name": "Opaque Shield",
@@ -174,7 +186,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": false,
 				"mana": 18,
-				"effect": "SHIELD" 
+				"effect": "SHIELD",
+				"info": "Creates shields for all members of the party."
 			}
 		],
 		"style": [
@@ -185,7 +198,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": true,
 				"style_points": 80,
-				"effect": null 
+				"effect": null,
+				"info": "Brings down a maasive ball of darkness on your enemies."
 			},
 			{
 				"name": "Aegis Shield",
@@ -194,7 +208,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": false,
 				"style_points": 40,
-				"effect": "SHIELD" 
+				"effect": "SHIELD",
+				"info": "Creates an impenetrable shield that lasts 5 rounds."
 			},
 			{
 				"name": "Devour",
@@ -203,7 +218,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": true,
 				"style_points": 90,
-				"effect": null 
+				"effect": null,
+				"info": "Lia consumes the nightmares of her enemies to fire up an attack that damages all enemies physically and psychologically."
 			},
 		],
 		"exp": 0,
@@ -219,7 +235,8 @@ var data = {
 				"targets": 1,
 				"hurt_enemies": true,
 				"mana": 0,
-				"effect": "STUN" 
+				"effect": "STUN",
+				"info": "Slam into a single enemy with using a shield."
 			},
 			{
 				"name": "Righteous Slash",
@@ -228,7 +245,8 @@ var data = {
 				"targets": 1,
 				"hurt_enemies": true,
 				"mana": 5,
-				"effect": null
+				"effect": null,
+				"info": "Brings down a mighty sword slash against the enemy"
 			},
 			{
 				"name": "Iron Glaive",
@@ -237,7 +255,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": true,
 				"mana": 8,
-				"effect": null 
+				"effect": null,
+				"info": "Cleaves enemies with a magic enfused sword"
 			},
 			{
 				"name": "Dragons Rage",
@@ -246,7 +265,9 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": true,
 				"mana": 20,
-				"effect": "FATIGUE"
+				"effect": "FATIGUE",
+				"info":
+					"Unleashes Seigi's rage on all enemies using as much magic to strengthen her blows as she can."
 			}
 		],
 		"style": [
@@ -257,7 +278,9 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": true,
 				"style_points": 80,
-				"effect": "STUN" 
+				"effect": "STUN",
+				"info":
+					"Unleashes a beastly roar that stuns all that hear it. Damages all enemies."
 			},
 			{
 				"name": "Knights Judgement",
@@ -265,8 +288,9 @@ var data = {
 				"damage": 100,
 				"targets": 1,
 				"hurt_enemies": false,
-				"style_points": 80,
-				"effect": null 
+				"style_points": 60,
+				"effect": null,
+				"info": "Unleashes a devastating sword slash on a single enemy."
 			},
 			{
 				"name": "Vapor Strike",
@@ -275,7 +299,8 @@ var data = {
 				"targets": -1,
 				"hurt_enemies": true,
 				"style_points": 90,
-				"effect": null 
+				"effect": null,
+				"info": "A flurry of sword strikes rains down on all enemies."
 			},
 		],
 		"exp": 0,

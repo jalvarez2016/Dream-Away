@@ -6,6 +6,8 @@ var battleData
 enum {
 	ACTION_SELECT,
 	SKILL_SELECT,
+	STYLE_SELECT,
+	ITEM_SELECT,
 	ENEMY_SELECT,
 	ALLY_SELECT
 }
@@ -29,9 +31,9 @@ var current_action
 var relevantStat
 
 #Skill variables
-var skillLabels = []
-var currentSkill
-var selectedSkillData
+var Labels = []
+var currentSelect
+var selectedData
 
 func _ready():
 	randomize()
@@ -86,7 +88,43 @@ func _process(_delta):
 				_cycle_skills_up()
 			elif Input.is_action_just_pressed("ui_action"):
 				infoContainer.visible = false
-				match selectedSkillData.hurt_enemies:
+				match selectedData.hurt_enemies:
+					true:
+						enemyAnimationPlayer.play("Selecting")
+						state = ENEMY_SELECT
+					false:
+						allyAnimationPlayer.play("Selecting")
+						state = ALLY_SELECT
+		STYLE_SELECT:
+			if Input.is_action_just_pressed("ui_back"):
+				state = ACTION_SELECT
+				_depopulate_info()
+				infoContainer.visible = false
+			elif Input.is_action_just_pressed("ui_down"):
+				_cycle_skills_down()
+			elif Input.is_action_just_pressed("ui_up"):
+				_cycle_skills_up()
+			elif Input.is_action_just_pressed("ui_action"):
+				infoContainer.visible = false
+				match selectedData.hurt_enemies:
+					true:
+						enemyAnimationPlayer.play("Selecting")
+						state = ENEMY_SELECT
+					false:
+						allyAnimationPlayer.play("Selecting")
+						state = ALLY_SELECT
+		ITEM_SELECT:
+			if Input.is_action_just_pressed("ui_back"):
+				state = ACTION_SELECT
+				_depopulate_info()
+				infoContainer.visible = false
+			elif Input.is_action_just_pressed("ui_down"):
+				_cycle_skills_down()
+			elif Input.is_action_just_pressed("ui_up"):
+				_cycle_skills_up()
+			elif Input.is_action_just_pressed("ui_action"):
+				infoContainer.visible = false
+				match selectedData.hurt_enemies:
 					true:
 						enemyAnimationPlayer.play("Selecting")
 						state = ENEMY_SELECT
@@ -111,7 +149,7 @@ func _process(_delta):
 				enemyAnimationPlayer.play("RESET")
 				_depopulate_info()
 		ALLY_SELECT:
-			var numTargets = selectedSkillData.targets
+			var numTargets = selectedData.targets
 			if numTargets > allies.size() || numTargets == -1:
 				pass
 #				Apply skill to all allies
@@ -199,23 +237,83 @@ func _rotate_left():
 	_update_action_label(current_action.get_name())
 
 func _cycle_skills_down():
-	currentSkill.get_node("AnimationPlayer").play("RESET")
-	skillLabels.push_back(skillLabels.pop_front())
-	currentSkill = skillLabels[0]
-	selectedSkillData = _get_skill_data(currentSkill.get_name())
-	currentSkill.get_node("AnimationPlayer").play("Selecting")
+	currentSelect.get_node("AnimationPlayer").play("RESET")
+	Labels.push_back(Labels.pop_front())
+	currentSelect = Labels[0]
+	selectedData = _get_skill_data(currentSelect.get_name())
+	currentSelect.get_node("AnimationPlayer").play("Selecting")
 	
 func _cycle_skills_up():
-	currentSkill.get_node("AnimationPlayer").play("RESET")
-	skillLabels.push_front(skillLabels.pop_back())
-	currentSkill = skillLabels[0]
-	selectedSkillData = _get_skill_data(currentSkill.get_name())
-	currentSkill.get_node("AnimationPlayer").play("Selecting")
+	currentSelect.get_node("AnimationPlayer").play("RESET")
+	Labels.push_front(Labels.pop_back())
+	currentSelect = Labels[0]
+	selectedData = _get_skill_data(currentSelect.get_name())
+	currentSelect.get_node("AnimationPlayer").play("Selecting")
 
 func _update_action_label(updated_text):
 	actionLabel.text = updated_text;
 
 # Action setup methods are below
+func _populate_info(items, type):
+#	Reduces the repetative code in setup functions
+#	@items: array An array of the labels to be placed in info
+#	@type: String The type of labels to be made
+	var stats = get_node("../").get_node("Stats")
+	relevantStat = stats.attack
+	var name = get_node("../").get_name()
+	var lvl = battleData.data[name].level
+	var count = 0;
+	infoContainer.visible = true
+	var description = $InfoContainer/Descriptor/VBoxContainer/Description
+	while count < items.size() && Labels.size() < items.size():
+		var itemData = items[count]
+		match type:
+			"ITEM":
+				var itemSelect = load("res://Utils/ActionSelctor/ItemSelect.tscn").instance()
+				itemSelect.set_name(itemData.name)
+				infoContainer.get_node("ScrollContainer/Info").add_child(itemSelect)
+				itemSelect._set_item_data(
+					itemData.name,
+					"res://Utils/Skill Icons/Skill_Attack_Icon.png",
+					itemData.amount
+				)
+				Labels.push_back(itemSelect)
+			"SKILL":
+				if itemData.level_required <= lvl:
+					var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
+					move.set_name(itemData.name)
+					infoContainer.get_node("ScrollContainer/Info").add_child(move)
+					move._set_move_data(
+						itemData.name,
+						"res://Utils/Skill Icons/Skill_Attack_Icon.png",
+						str(itemData.mana),
+						"res://Utils/Skill Icons/Skill_Attack_Icon.png"
+					)
+					Labels.push_back(move)
+			"STYLE": 
+				if itemData.level_required <= lvl:
+					var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
+					move.set_name(itemData.name)
+					infoContainer.get_node("ScrollContainer/Info").add_child(move)
+					move._set_move_data(
+						itemData.name,
+						"res://Utils/Skill Icons/Skill_Attack_Icon.png",
+						str(itemData.style_points),
+						"res://Utils/Skill Icons/Skill_Attack_Icon.png"
+					)
+					Labels.push_back(move)
+		count += 1
+	currentSelect = Labels[0]
+	match type:
+		"ITEM":
+			selectedData = _get_item_info(currentSelect.get_name())
+		"SKILL":
+			selectedData = _get_skill_data(currentSelect.get_name())
+		"STYLE":
+			selectedData = _get_style_data(currentSelect.get_name())
+	print(selectedData)
+	description.text = selectedData.info
+
 func _attack_setup():
 #	Get character info
 	var stats = get_node("../").get_node("Stats")
@@ -226,82 +324,25 @@ func _attack_setup():
 	enemyAnimationPlayer.play("Selecting")
 
 func _skill_setup():
-	var stats = get_node("../").get_node("Stats")
-	relevantStat = stats.attack
 	var name = get_node("../").get_name()
 	var skills = battleData.data[name].skills
-	var lvl = battleData.data[name].level
-	var count = 0;
-	infoContainer.visible = true
-	while count < skills.size() && skillLabels.size() < skills.size():
-		var skillData = skills[count]
-		if skillData.level_required <= lvl:
-			var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
-			move.set_name(skillData.name)
-			infoContainer.get_node("ScrollContainer/Info").add_child(move)
-			move._set_move_data(
-				skillData.name,
-				"res://Utils/Skill Icons/Skill_Attack_Icon.png",
-				str(skillData.mana),
-				"res://Utils/Skill Icons/Skill_Attack_Icon.png"
-			)
-			skillLabels.push_back(move)
-		count += 1
-	currentSkill = skillLabels[0]
-	selectedSkillData = _get_skill_data(currentSkill.get_name())
-	currentSkill.get_node("AnimationPlayer").play("Selecting")
+	_populate_info(skills, "SKILL")
+	currentSelect.get_node("AnimationPlayer").play("Selecting")
 	state = SKILL_SELECT
 
 func _style_setup():
-#	var stats = get_node("../").get_node("Stats")
 	var name = get_node("../").get_name()
 	var styleSkills = battleData.data[name].style
-	var lvl = battleData.data[name].level
-	var count = 0;
-	infoContainer.visible = true
-	while count < styleSkills.size() && skillLabels.size() < styleSkills.size():
-		var styleMoveData = styleSkills[count]
-		if styleMoveData.level_required <= lvl:
-			var move = load("res://Utils/ActionSelctor/MoveSelect.tscn").instance()
-			move.set_name(styleMoveData.name)
-			infoContainer.get_node("ScrollContainer/Info").add_child(move)
-			move._set_move_data(
-				styleMoveData.name,
-				"res://Utils/Skill Icons/Skill_Attack_Icon.png",
-				str(styleMoveData.style_points),
-				"res://Utils/Skill Icons/Skill_Attack_Icon.png"
-			)
-			skillLabels.push_back(move)
-		count += 1
-	currentSkill = skillLabels[0]
-	selectedSkillData = _get_skill_data(currentSkill.get_name())
-	currentSkill.get_node("AnimationPlayer").play("Selecting")
+	_populate_info(styleSkills, "STYLE")
+	currentSelect.get_node("AnimationPlayer").play("Selecting")
 	state = SKILL_SELECT
 
 func _item_setup():
-	print(battleData.data.items)
 	var itemList = battleData.data.items
 	var count = 0;
-	infoContainer.visible = true
-	var description = $InfoContainer/Descriptor/Description
-	while count < itemList.size():
-		var item = itemList[count]
-		var itemSelect = load("res://Utils/ActionSelctor/ItemSelect.tscn").instance()
-		itemSelect.set_name(item.name)
-		infoContainer.get_node("ScrollContainer/Info").add_child(itemSelect)
-		itemSelect._set_item_data(
-			item.name,
-			"res://Utils/Skill Icons/Skill_Attack_Icon.png",
-			item.amount
-		)
-		skillLabels.push_back(itemSelect)
-		count += 1
-	currentSkill = skillLabels[0]
-	var selectedData = _get_item_info(currentSkill.get_name())
-	description.text = selectedData.info
-	currentSkill.get_node("AnimationPlayer").play("Selecting")
-	state = SKILL_SELECT
-	pass
+	_populate_info(itemList, "ITEM")
+	currentSelect.get_node("AnimationPlayer").play("Selecting")
+	state = ITEM_SELECT
 
 func _get_skill_data(skill_name):
 	var name = get_node("../").get_name()
@@ -314,18 +355,29 @@ func _get_skill_data(skill_name):
 		count += 1
 	return skillData
 
+func _get_style_data(style_name):
+	var name = get_node("../").get_name()
+	var style_moves = battleData.data[name].style
+	var count = 0
+	var styleData
+	while count < style_moves.size():
+		if style_moves[count].name == style_name:
+			styleData = style_moves[count]
+		count += 1
+	return styleData
+
 func _get_item_info(item_name):
 	return battleData.itemGlossary[item_name]
 
 func _depopulate_info():
-	var description = $InfoContainer/Descriptor/Description
+	var description = $InfoContainer/Descriptor/VBoxContainer/Description
 	description.text = ""
 	var infoStuff = infoContainer.get_node("ScrollContainer/Info")
 	var count = 0
 	while count < infoStuff.get_children().size():
 		infoStuff.get_children()[count].queue_free()
 		count += 1
-	skillLabels = []
+	Labels = []
 
 # Enemy Cycling Logic
 func _next_enemy():
@@ -377,7 +429,7 @@ func _attack_action():
 func _skill_action(_on_ally: bool):
 	if _on_ally:
 		print(current_ally)
-		var skillEffect = selectedSkillData.effect
+		var skillEffect = selectedData.effect
 		match skillEffect:
 			"HEAL":
 				var amountHealed = get_node("../Stats").attack + (randi() % 5)
@@ -397,12 +449,12 @@ func _skill_action(_on_ally: bool):
 
 	enemyAnimationPlayer.play("RESET")
 
-	if selectedSkillData.hurt_enemies:
+	if selectedData.hurt_enemies:
 		var enemyDefense = current_enemy.get_node("Stats").defense
-		var damageDelt = selectedSkillData.damage - (enemyDefense/ 1.5)
+		var damageDelt = selectedData.damage - (enemyDefense/ 1.5)
 		current_enemy._take_damage(damageDelt + (randi() % 5))
 
-	var skillEffect = selectedSkillData.effect
+	var skillEffect = selectedData.effect
 	match skillEffect:
 		"STUN":
 			current_enemy._set_status("STUN")
