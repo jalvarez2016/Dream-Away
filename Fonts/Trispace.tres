@@ -3,5 +3,4 @@
 [ext_resource path="res://Fonts/Trispace-VariableFont_wdth,wght.ttf" type="DynamicFontData" id=1]
 
 [resource]
-size = 3
 font_data = ExtResource( 1 )
