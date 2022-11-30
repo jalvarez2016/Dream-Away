@@ -44,6 +44,7 @@ func _create_player(nodeData, index):
 	var battlePlayer = load("res://Players/BattlePlayer.tscn").instance()
 	var stats = battlePlayer.get_node("Stats")
 	var sprite = battlePlayer.get_node("Sprite")
+	var animationPlayer = battlePlayer.get_node("AnimationPlayer")
 	var newSprite = load(nodeData.sprite)
 	#Set individual player stats
 	battlePlayer.set_name(nodeData.name)
@@ -58,7 +59,21 @@ func _create_player(nodeData, index):
 	#	Loading correct animations into AnimationPlayer
 	#	https://docs.godotengine.org/en/stable/classes/class_animationplayer.html#class-animationplayer-method-add-animation
 	#	https://stackoverflow.com/questions/73257252/how-do-i-programmatically-load-animations-in-godot-separating-animation-from-ar
-		
+	match nodeData.name:
+		"Lia":
+			var idle = load("res://Players/LiaAnimations/BatlteIdle.tres")
+			var block = load("res://Players/LiaAnimations/Block.tres")
+			var cast = load("res://Players/LiaAnimations/CastMagic.tres")
+			var faint = load("res://Players/LiaAnimations/Faint.tres")
+			var hurt = load("res://Players/LiaAnimations/Hurt.tres")
+			animationPlayer.add_animation("BattleIdle", idle)
+			animationPlayer.add_animation("Block", block)
+			animationPlayer.add_animation("CastMagic", cast)
+			animationPlayer.add_animation("Faint", faint)
+			animationPlayer.add_animation("Hurt", hurt)
+			animationPlayer.play("BattleIdle")
+		"Seigi": pass
+		"Player": pass
 	#	Set individual player position
 	battlePlayer.position = Vector2(50, 50 * index + 30)
 	pContainer.add_child(battlePlayer)

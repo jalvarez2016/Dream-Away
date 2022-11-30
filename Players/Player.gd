@@ -34,6 +34,11 @@ func _process(delta):
 	match state:
 		IDLE:
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
+			var animation = animationPlayer.get_current_animation()
+			if animation == "LeftWalk" || animation == "LeftIdle":
+				animationPlayer.play("LeftIdle")
+			elif animation == "RightWalk" || animation == "RightIdle":
+				animationPlayer.play("RightIdle")
 		WALK:
 			
 #			#animation logic

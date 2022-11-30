@@ -264,11 +264,13 @@ position = Vector2( 160, 90 )
 [node name="Sprite" parent="Entities Container/Player" index="0"]
 texture = ExtResource( 1 )
 hframes = 60
-frame = 6
 
 [node name="AnimationPlayer" parent="Entities Container/Player" index="1"]
+autoplay = "FrontIdle"
 anims/FrontIdle = ExtResource( 17 )
+anims/LeftIdle = ExtResource( 4 )
 anims/LeftWalk = ExtResource( 8 )
+anims/RightIdle = ExtResource( 7 )
 anims/RightWalk = ExtResource( 9 )
 
 [node name="Stats" parent="Entities Container/Player" index="3"]
