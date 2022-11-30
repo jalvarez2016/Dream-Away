@@ -264,6 +264,12 @@ position = Vector2( 160, 90 )
 [node name="Sprite" parent="Entities Container/Player" index="0"]
 texture = ExtResource( 1 )
 hframes = 60
+frame = 6
+
+[node name="AnimationPlayer" parent="Entities Container/Player" index="1"]
+anims/FrontIdle = ExtResource( 17 )
+anims/LeftWalk = ExtResource( 8 )
+anims/RightWalk = ExtResource( 9 )
 
 [node name="Stats" parent="Entities Container/Player" index="3"]
 speed = 12

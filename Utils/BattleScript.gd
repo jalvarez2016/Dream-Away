@@ -24,7 +24,7 @@ func _ready():
 	var enemies = level_parameters.enemies
 	var counter = 0
 	for player in players:
-		_create_player(player, counter)
+		call_deferred("_create_player",player, counter)
 		counter += 1
 	counter = 0
 	for enemy in enemies:
@@ -38,7 +38,7 @@ func _ready():
 	turnManager.connect("ally_turn_started", self, "_on_ally_turn_end")
 	turnManager.connect("enemy_turn_started", self, "_on_enemy_turn_end")
 	currentTurn = turn_queue.pop_front()
-	_start_turn_sequence()
+	call_deferred("_start_turn_sequence")
 
 func _create_player(nodeData, index):
 	var battlePlayer = load("res://Players/BattlePlayer.tscn").instance()
@@ -81,7 +81,7 @@ func _create_enemy(nodeData, index, amount):
 		
 	#	Set individual player position
 	battleEnemy.position = Vector2(220, (120/amount + 2) * index + 60)
-	eContainer.add_child(battleEnemy)
+	eContainer.call_deferred("add_child", battleEnemy)
 
 func _set_turn_order(characters):
 	turn_queue.append_array(characters)

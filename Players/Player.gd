@@ -37,10 +37,10 @@ func _process(delta):
 		WALK:
 			
 #			#animation logic
-#			if input_vector.x > 0:
-#				animationPlayer.play("LeftWalk")
-#			else:
-#				animationPlayer.play("RightWalk")
+			if input_vector.x < 0:
+				animationPlayer.play("LeftWalk")
+			else:
+				animationPlayer.play("RightWalk")
 			
 			velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 		ATTACK:
