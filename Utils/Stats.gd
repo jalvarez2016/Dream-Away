@@ -1,5 +1,6 @@
 extends Node2D
 
+export(int) var maxHp = 10
 export(int) var hp = 10
 export(int) var attack = 10
 export(int) var defense = 10

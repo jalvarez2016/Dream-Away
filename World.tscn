@@ -274,6 +274,7 @@ anims/RightIdle = ExtResource( 7 )
 anims/RightWalk = ExtResource( 9 )
 
 [node name="Stats" parent="Entities Container/Player" index="3"]
+maxHp = 20
 speed = 12
 
 [node name="Lia" parent="Entities Container" instance=ExtResource( 2 )]

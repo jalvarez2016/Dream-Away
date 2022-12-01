@@ -469,7 +469,10 @@ func _skill_action(_on_ally: bool, all: bool):
 				"HEAL":
 					var amountHealed = get_node("../Stats").attack + (randi() % 5)
 					print("Healing this amount: ", amountHealed)
-					current_ally.get_node("Stats").hp += amountHealed
+					if current_ally.get_node("Stats").hp + amountHealed < current_ally.get_node("Stats").maxHp:
+						current_ally.get_node("Stats").hp += amountHealed
+					else:
+						current_ally.get_node("Stats").hp = current_ally.get_node("Stats").maxHp
 					allyAnimationPlayer.play("RESET")
 	#				Healing animation and sfx
 				"SHIELD":
