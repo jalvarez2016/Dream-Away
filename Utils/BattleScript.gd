@@ -133,9 +133,19 @@ func _on_ally_turn_end():
 		else:
 			_swap_turn()
 
+func _get_alive_players(players:Array):
+	var count = 0
+	var alive_allies = []
+	while count < players.size():
+		if !players[count].get_node("Stats").downed:
+			alive_allies.push_back(players[count])
+		count += 1
+	return alive_allies
+
 func _on_enemy_turn_end():
 	var players = get_tree().get_nodes_in_group('Ally')
-	var selectedPlayer = players[randi() % players.size()]
+	var selectedPlayer = _get_alive_players(players)[randi() % players.size()]
+#	var selectedPlayer = players[randi() % players.size()]
 	var selectedPlayerStats = selectedPlayer.get_node("Stats")
 	var selectedPlayerDef = selectedPlayerStats.defense
 	
@@ -166,6 +176,9 @@ func _on_enemy_turn_end():
 					calculateDamage = (enemyAttackStat - round(selectedPlayerDef * 0.8)) + (randi() % 5)
 
 				selectedPlayerStats.hp = selectedPlayerStats.hp - calculateDamage
+				if selectedPlayerStats.hp < 0:
+					selectedPlayerStats.downed = true
+					print(selectedPlayer.get_node("Stats"))
 				#Player takes damage animation here
 
 func _swap_turn():

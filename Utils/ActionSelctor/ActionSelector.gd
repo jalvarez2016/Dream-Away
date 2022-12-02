@@ -37,6 +37,11 @@ var selectedData
 
 func _ready():
 	randomize()
+	var parentNode = get_node("../")
+	print(parentNode.get_node("Stats").downed)
+	if parentNode.get_node("Stats").downed:
+		get_node("../../../")._on_ally_turn_end()
+		queue_free()
 	battleData = get_node("/root/BattleData")
 	actions = get_node("Actions").get_children()
 	current_action = actions.pop_front()
@@ -515,3 +520,23 @@ func _skill_action(_on_ally: bool, all: bool):
 #	Check if enemy dead
 	get_node("../../../")._on_ally_turn_end()
 	queue_free()
+
+# Ally Utils are below:
+func _are_allies_downed():
+	var count = 0
+	var downed = false
+	while count < allies.size():
+		var ally = allies[count]
+		if !(ally.get_node("Stats").downed):
+			return true
+		count += 1
+	return downed
+
+func _downed_allies():
+	var count = 0
+	var downed_allies = []
+	while count < allies.size():
+		if allies[count].get_node("Stats").downed:
+			downed_allies.push_back(allies[count])
+		count += 1
+	return downed_allies
